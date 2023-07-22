@@ -1,47 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
-import 'package:satria_optik_admin/screen/home/custom_appbar.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
-import 'package:satria_optik_admin/screen/home/drawer.dart';
 
-class HomePage extends StatelessWidget {
-  static String route = '/home';
-  const HomePage({super.key});
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     int count = 5;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: const SearchAppBar(),
-      drawer: const CustomDrawer(),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Consumer<HomeProvider>(
-            builder: (context, value, child) {
-              switch (value.index) {
-                case 0:
-                  return ListView(
-                    children: [
-                      greetingCard(),
-                      newOrdersCard(count),
-                      const DailySummary(),
-                      // Text(
-                      //     '''Dashboard tampilkan orderan baru, jumlah orderan hari ini, '''
-                      //     '''jumlah omzet hari ini, tampilkan stok yang menipis'''),
-                    ],
-                  );
-
-                default:
-                  return const Text('Something Error');
-              }
-            },
-          ),
-        ),
-      ),
+    return ListView(
+      children: [
+        greetingCard(),
+        newOrdersCard(count),
+        const DailySummary(),
+        // Text(
+        //     '''Dashboard tampilkan orderan baru, jumlah orderan hari ini, '''
+        //     '''jumlah omzet hari ini, tampilkan stok yang menipis'''),
+      ],
     );
   }
 

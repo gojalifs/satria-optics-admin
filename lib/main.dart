@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/custom/custom_theme.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
-import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
+import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
 import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         routes: {
           CustomSplashPage.route: (context) => const CustomSplashPage(),
           LoginPage.route: (context) => const LoginPage(),
-          HomePage.route: (context) => const HomePage(),
+          MainPage.route: (context) => const MainPage(),
         },
       ),
     );

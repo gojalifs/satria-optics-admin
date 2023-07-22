@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
-import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
+import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
 class CustomSplashPage extends StatefulWidget {
   static String route = '/splash';
@@ -20,7 +20,7 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
       return;
     }
     if (status) {
-      Navigator.of(context).pushReplacementNamed(HomePage.route);
+      Navigator.of(context).pushReplacementNamed(MainPage.route);
     } else {
       Navigator.of(context).pushReplacementNamed(LoginPage.route);
     }

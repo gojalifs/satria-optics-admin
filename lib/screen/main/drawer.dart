@@ -90,6 +90,15 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Data Admin'),
           ),
           const Divider(),
+          ListTile(
+            onTap: () {
+              value.index = 7;
+              Navigator.of(context).pop();
+            },
+            leading: Image.asset('assets/icons/setting.png'),
+            title: const Text('Setting'),
+          ),
+          const Divider(),
           Consumer<AuthProvider>(
             builder: (context, value, child) => ListTile(
               onTap: () async {
