@@ -48,8 +48,10 @@ class _SearchAppBarState extends State<SearchAppBar> {
           focusedBorder: InputBorder.none,
           hintText: 'Search User, Order ID, or Product',
         ),
-        label: 'Tap To Search',
-        labelStyle: Theme.of(context).textTheme.bodyMedium!,
+        label: 'OPTIK SATRIA JAYA',
+        labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
         textInputAction: TextInputAction.search,
         onChanged: (value) {},
         onFieldSubmitted: (value) {},
