@@ -11,6 +11,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int count = 5;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const SearchAppBar(),
@@ -25,7 +27,7 @@ class HomePage extends StatelessWidget {
                   return ListView(
                     children: [
                       greetingCard(),
-                      newOrderCard(),
+                      newOrdersCard(count),
                       const DailySummary(),
                       // Text(
                       //     '''Dashboard tampilkan orderan baru, jumlah orderan hari ini, '''
@@ -38,6 +40,53 @@ class HomePage extends StatelessWidget {
               }
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  Card newOrdersCard(int count) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          children: [
+            const Text(
+              'Today Order(s)',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            ),
+            ListView.separated(
+              itemCount: 3,
+              shrinkWrap: true,
+              primary: false,
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+              itemBuilder: (context, index) {
+                return const ListTile(
+                  title: Text('Nama Kacamata'),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Nama Penerima'),
+                      Text(
+                        'Rp500.000',
+                        style: TextStyle(
+                          color: Color.fromRGBO(251, 18, 16, 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            count > 3
+                ? TextButton(
+                    onPressed: () {},
+                    child: const Text('Show More . . .'),
+                  )
+                : const SizedBox(),
+          ],
         ),
       ),
     );
@@ -84,6 +133,7 @@ class HomePage extends StatelessWidget {
                     builder: (context, value, child) => TextButton(
                       onPressed: () {
                         value.hasNotification.add('home');
+                        print(value.hasNotification);
                       },
                       child: const Text('Show More . . .'),
                     ),

@@ -18,7 +18,8 @@ class BaseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set hasNotification(List<String> name) {
+  set setNotification(String name) {
+    hasNotification.add(name);
     notifyListeners();
   }
 

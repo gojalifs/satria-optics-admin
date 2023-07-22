@@ -3,21 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 
-class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
+class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SearchAppBar({super.key});
 
   @override
-  State<SearchAppBar> createState() => _SearchAppBarState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class _SearchAppBarState extends State<SearchAppBar> {
-  TextEditingController searchController = TextEditingController();
-  bool isSearch = false;
-  @override
   Widget build(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
     return AppBar(
       leading: IconButton(
         icon: Stack(
@@ -43,6 +34,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
         onPressed: () => Scaffold.of(context).openDrawer(),
       ),
       title: AnimatedSearchBar(
+        controller: searchController,
         searchDecoration: const InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -58,4 +50,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
