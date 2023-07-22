@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/custom/custom_theme.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
-import 'package:satria_optik_admin/screen/home/home_screen.dart';
+import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 
 import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
