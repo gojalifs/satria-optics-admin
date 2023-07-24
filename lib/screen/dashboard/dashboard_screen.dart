@@ -2,123 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
+import 'package:satria_optik_admin/provider/order_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    int count = 5;
-
     return ListView(
       children: [
         greetingCard(),
-        newOrdersCard(count),
-        const DailySummary(),
-        // Text(
-        //     '''Dashboard tampilkan orderan baru, jumlah orderan hari ini, '''
-        //     '''jumlah omzet hari ini, tampilkan stok yang menipis'''),
+        newOrdersCard(),
+        summaryCard(),
+        stockControllCard(),
       ],
-    );
-  }
-
-  Card newOrdersCard(int count) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          children: [
-            const Text(
-              'Today Order(s)',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-            ),
-            ListView.separated(
-              itemCount: 3,
-              shrinkWrap: true,
-              primary: false,
-              separatorBuilder: (context, index) {
-                return const Divider();
-              },
-              itemBuilder: (context, index) {
-                return const ListTile(
-                  title: Text('Nama Kacamata'),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Nama Penerima'),
-                      Text(
-                        'Rp500.000',
-                        style: TextStyle(
-                          color: Color.fromRGBO(251, 18, 16, 1),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            count > 3
-                ? TextButton(
-                    onPressed: () {},
-                    child: const Text('Show More . . .'),
-                  )
-                : const SizedBox(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Card newOrderCard() {
-    int count = 5;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          children: [
-            const Text(
-              'Today Order(s)',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-            ),
-            ListView.separated(
-              itemCount: 3,
-              shrinkWrap: true,
-              primary: false,
-              separatorBuilder: (context, index) {
-                return const Divider();
-              },
-              itemBuilder: (context, index) {
-                return const ListTile(
-                  title: Text('Nama Kacamata'),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Nama Penerima'),
-                      Text(
-                        'Rp500.000',
-                        style: TextStyle(
-                          color: Color.fromRGBO(251, 18, 16, 1),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            count > 3
-                ? Consumer<HomeProvider>(
-                    builder: (context, value, child) => TextButton(
-                      onPressed: () {
-                        value.hasNotification.add('home');
-                        print(value.hasNotification);
-                      },
-                      child: const Text('Show More . . .'),
-                    ),
-                  )
-                : const SizedBox(),
-          ],
-        ),
-      ),
     );
   }
 
@@ -193,15 +90,94 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class DailySummary extends StatelessWidget {
-  const DailySummary({
-    super.key,
-  });
+  Card newOrdersCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          children: [
+            const Text(
+              'Today Order(s)',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            ),
+            const Divider(),
+            Consumer2<HomeProvider, OrderProvider>(
+              builder: (context, home, order, child) => ListView.separated(
+                itemCount: order.orders.length <= 3 ? order.orders.length : 3,
+                shrinkWrap: true,
+                primary: false,
+                separatorBuilder: (context, index) {
+                  return const Divider();
+                },
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                        order.orders[index].cartProduct?[0].product.name ?? ''),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(order.orders[index].address?.receiverName ?? ''),
+                        Text(
+                          '${order.orders[index].total}',
+                          style: const TextStyle(
+                            color: Color.fromRGBO(251, 18, 16, 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Consumer<OrderProvider>(
+              builder: (context, value, child) {
+                if (value.orders.length > 3) {
+                  return TextButton(
+                    onPressed: () {},
+                    child: const Text('Show More . . .'),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Card stockControllCard() {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Text(
+              'Stock Controll',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            ),
+            Divider(),
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Rayaban'),
+                  Text('5'),
+                ],
+              ),
+            ),
+            ListTile(
+              title: Text('Other product has more than 10 pcs'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Card summaryCard() {
     return Card(
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -211,6 +187,7 @@ class DailySummary extends StatelessWidget {
               'Today Summary',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
+            Divider(),
             ListTile(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

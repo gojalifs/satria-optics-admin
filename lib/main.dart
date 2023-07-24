@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/custom/custom_theme.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
+import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
+import 'package:satria_optik_admin/screen/new_order/order_detail_page.dart';
 
 import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => BaseProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => HomeProvider()),
+        ChangeNotifierProvider(create: (context) => OrderProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -38,6 +41,11 @@ class MyApp extends StatelessWidget {
           CustomSplashPage.route: (context) => const CustomSplashPage(),
           LoginPage.route: (context) => const LoginPage(),
           MainPage.route: (context) => const MainPage(),
+          OrderDetailPage.route: (context) => const OrderDetailPage(),
+        },
+        onGenerateRoute: (settings) {
+          assert(false, 'Need to implement ${settings.name} on routes');
+          return null;
         },
       ),
     );

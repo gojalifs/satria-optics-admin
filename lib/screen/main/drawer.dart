@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
+import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -26,9 +27,11 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Dashboard'),
           ),
           ListTile(
-            onTap: () {
+            onTap: () async {
               value.index = 1;
               Navigator.of(context).pop();
+              await Provider.of<OrderProvider>(context, listen: false)
+                  .getNewOrder();
             },
             leading: Image.asset('assets/icons/new-order.png'),
             title: const Text('New Order'),

@@ -4,6 +4,7 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/main/custom_appbar.dart';
 import 'package:satria_optik_admin/screen/main/drawer.dart';
+import 'package:satria_optik_admin/screen/new_order/new_order_screen.dart';
 
 class MainPage extends StatelessWidget {
   static String route = '/home';
@@ -24,7 +25,8 @@ class MainPage extends StatelessWidget {
               switch (value.index) {
                 case 0:
                   return const DashboardScreen();
-
+                case 1:
+                  return const NewOrderPage();
                 default:
                   return const Text('Something Error');
               }
