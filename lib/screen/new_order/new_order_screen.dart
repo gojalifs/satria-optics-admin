@@ -6,7 +6,7 @@ import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/new_order/order_detail_page.dart';
 
 class NewOrderPage extends StatelessWidget {
-  static String route = '/new-order';
+  static String page = 'new-order';
   const NewOrderPage({Key? key}) : super(key: key);
 
   @override

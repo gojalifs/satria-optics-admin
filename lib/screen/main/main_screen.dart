@@ -22,13 +22,12 @@ class MainPage extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           child: Consumer<HomeProvider>(
             builder: (context, value, child) {
-              switch (value.index) {
-                case 0:
-                  return const DashboardScreen();
-                case 1:
-                  return const NewOrderPage();
-                default:
-                  return const Text('Something Error');
+              if (value.page == DashboardScreen.page) {
+                return const DashboardScreen();
+              } else if (value.page == NewOrderPage.page) {
+                return const NewOrderPage();
+              } else {
+                return const Text('Something Error');
               }
             },
           ),

@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
+import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
+import 'package:satria_optik_admin/screen/new_order/new_order_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -20,7 +22,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.index = 0;
+              value.page = DashboardScreen.page;
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/store.png'),
@@ -28,7 +30,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              value.index = 1;
+              value.page = NewOrderPage.page;
               Navigator.of(context).pop();
               await Provider.of<OrderProvider>(context, listen: false)
                   .getNewOrder();
@@ -38,7 +40,15 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.index = 2;
+              value.page = 'on-delivery';
+              Navigator.of(context).pop();
+            },
+            leading: Image.asset('assets/icons/delivery-truck.png'),
+            title: const Text('On delivery'),
+          ),
+          ListTile(
+            onTap: () {
+              value.page = 'ccashier';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/cashier.png'),
@@ -46,7 +56,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.index = 3;
+              value.page = 'order-history';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/booking.png'),
@@ -54,7 +64,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.index = 4;
+              value.page = 'product';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/booking.png'),
@@ -62,7 +72,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.index = 5;
+              value.page = 'chat';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/demand.png'),
@@ -74,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
             builder: (context, value, child) {
               return ListTile(
                 onTap: () {
-                  value.index = 6;
+                  value.page = 'report';
                   Navigator.of(context).pop();
                 },
                 leading: Image.asset('assets/icons/sales.png'),
@@ -86,7 +96,7 @@ class CustomDrawer extends StatelessWidget {
           /// TODO Data Admin, muncul di owner
           ListTile(
             onTap: () {
-              value.index = 7;
+              value.page = 'admins';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/worker.png'),
@@ -95,7 +105,7 @@ class CustomDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             onTap: () {
-              value.index = 7;
+              value.page = 'setting';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/setting.png'),
