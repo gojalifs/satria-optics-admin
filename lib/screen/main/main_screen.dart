@@ -24,11 +24,12 @@ class MainPage extends StatelessWidget {
             builder: (context, value, child) {
               if (value.page == DashboardScreen.page) {
                 return const DashboardScreen();
-              } else if (value.page == NewOrderPage.page) {
-                return const NewOrderPage();
-              } else {
-                return const Text('Something Error');
               }
+              if (value.page == NewOrderPage.page) {
+                return const NewOrderPage();
+              }
+              // Default screen
+              return const Text('Something Error');
             },
           ),
         ),
