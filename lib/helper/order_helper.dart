@@ -6,12 +6,13 @@ class OrderHelper extends FirestoreHelper {
   /// TODO using FCM
   getNotification() {}
 
-  Future<List<OrderModel>> getNewOrder() async {
+  Future<List<OrderModel>> getNewOrder(String orderStatus) async {
+    print('object $orderStatus');
     List<OrderModel> orders = [];
     var data = await db
         .collectionGroup('transactions')
         .where('paymentStatus', isEqualTo: 'Paid')
-        .where('orderStatus', isEqualTo: 'packing')
+        .where('orderStatus', isEqualTo: orderStatus)
         .orderBy('orderMadeTime', descending: true)
         .get();
     String ref;

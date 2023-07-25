@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
-import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
@@ -21,7 +20,6 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
       return;
     }
     if (status) {
-      await Provider.of<OrderProvider>(context, listen: false).getNewOrder();
       if (!mounted) {
         return;
       }

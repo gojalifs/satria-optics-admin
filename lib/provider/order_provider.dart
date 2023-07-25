@@ -6,6 +6,7 @@ import 'package:satria_optik_admin/provider/base_provider.dart';
 class OrderProvider extends BaseProvider {
   final OrderHelper _orderHelper = OrderHelper();
   List<OrderModel> _newOrders = [];
+  List<OrderModel> _shippings = [];
   final List<OrderModel> _shippingOrder = [];
   OrderModel _order = OrderModel();
   bool _isfirst = true;
@@ -15,6 +16,7 @@ class OrderProvider extends BaseProvider {
   bool _hasNewOrder = false;
 
   List<OrderModel> get orders => _newOrders;
+  List<OrderModel> get shippings => _shippings;
   OrderModel get order => _order;
   bool get isFirst => _isfirst;
   bool get hasNewOrder => _hasNewOrder;
@@ -29,16 +31,21 @@ class OrderProvider extends BaseProvider {
     notifyListeners();
   }
 
-  Future getNewOrder() async {
+  Future getNewOrder(String orderStatus) async {
     if (_isfirst) {
       _isfirst = false;
       _hasNewOrder = true;
     }
-    if (hasNewOrder) {
+    if (_newOrders.isEmpty || _shippings.isEmpty || hasNewOrder) {
       state = ConnectionState.active;
-      _newOrders = await _orderHelper.getNewOrder();
+      if (orderStatus == 'packing') {
+        _newOrders = await _orderHelper.getNewOrder(orderStatus);
+      } else {
+        _shippings = await _orderHelper.getNewOrder(orderStatus);
+      }
       _hasNewOrder = false;
     }
+
     state = ConnectionState.done;
     notifyListeners();
   }

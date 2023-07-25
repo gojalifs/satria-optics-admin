@@ -25,8 +25,11 @@ class MainPage extends StatelessWidget {
               if (value.page == DashboardScreen.page) {
                 return const DashboardScreen();
               }
-              if (value.page == NewOrderPage.page) {
-                return const NewOrderPage();
+              if (value.page == 'new-order') {
+                return const NewOrderPage(orderStatus: 'packing');
+              }
+              if (value.page == 'on-delivery') {
+                return const NewOrderPage(orderStatus: 'Shipping');
               }
               // Default screen
               return const Text('Something Error');

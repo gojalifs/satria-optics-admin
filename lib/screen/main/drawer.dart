@@ -5,7 +5,6 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
-import 'package:satria_optik_admin/screen/new_order/new_order_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -30,25 +29,27 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              value.page = NewOrderPage.page;
+              value.page = 'new-order';
               Navigator.of(context).pop();
               await Provider.of<OrderProvider>(context, listen: false)
-                  .getNewOrder();
+                  .getNewOrder('packing');
             },
             leading: Image.asset('assets/icons/new-order.png'),
             title: const Text('New Order'),
           ),
           ListTile(
-            onTap: () {
+            onTap: () async {
               value.page = 'on-delivery';
               Navigator.of(context).pop();
+              await Provider.of<OrderProvider>(context, listen: false)
+                  .getNewOrder('Shipping');
             },
             leading: Image.asset('assets/icons/delivery-truck.png'),
             title: const Text('On delivery'),
           ),
           ListTile(
             onTap: () {
-              value.page = 'ccashier';
+              value.page = 'cashier';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/cashier.png'),
