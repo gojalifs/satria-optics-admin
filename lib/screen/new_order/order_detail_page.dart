@@ -1,10 +1,13 @@
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/model/address.dart';
 
 import 'package:satria_optik_admin/model/order.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailPage extends StatelessWidget {
   static String route = '/order-detail';
@@ -55,131 +58,133 @@ class OrderDetailPage extends StatelessWidget {
                         title: 'Finished At',
                         data: '${order.orderFinishTime?.toDate()}'),
                     const Divider(),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: order.cartProduct?.length ?? 0,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          var product = order.cartProduct![index];
-                          var frame = order.cartProduct![index].product;
-                          var lens = order.cartProduct![index].lens;
-                          var minusData = order.cartProduct?[index].minusData;
-                          return Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 150,
-                                    height: 150,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        frame.colors?[product.color],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                        ),
-                                        child: Text(frame.name!),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                        ),
-                                        child: Text(product.color),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                        ),
-                                        child: Text(lens.name!),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                        ),
-                                        child: Text('${product.totalPrice}'),
-                                      ),
-                                      if (minusData!.leftEyeMinus!.isEmpty)
-                                        const Text('Normal Lens (Plain)'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              if (minusData.leftEyeMinus!.isNotEmpty)
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Divider(),
-                                ),
-                              if (minusData.leftEyeMinus!.isNotEmpty)
-                                Column(
-                                  children: [
-                                    const Text(
-                                      'Lens Detail',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    _RowData(
-                                      title: 'Left Eye Minus',
-                                      data: minusData.leftEyeMinus!,
-                                    ),
-                                    _RowData(
-                                      title: 'Right Eye Minus',
-                                      data: minusData.rightEyeMinus!,
-                                    ),
-                                    _RowData(
-                                      title: 'Left Eye Plus',
-                                      data: minusData.leftEyePlus!,
-                                    ),
-                                    _RowData(
-                                      title: 'Right Eye Minus',
-                                      data: minusData.rightEyePlus!,
-                                    ),
-                                  ],
-                                ),
-                              if (minusData.recipePath!.isNotEmpty)
+                    Card(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      elevation: 3,
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: order.cartProduct?.length ?? 0,
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemBuilder: (context, index) {
+                            var product = order.cartProduct![index];
+                            var frame = order.cartProduct![index].product;
+                            var lens = order.cartProduct![index].lens;
+                            var minusData = order.cartProduct?[index].minusData;
+                            return Column(
+                              children: [
                                 Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
-                                      width: 100,
-                                      height: 100,
-                                      child: Image.network(
-                                        minusData.recipePath!,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.error_outline_rounded),
-                                              Text('Failed getting image'),
-                                            ],
-                                          );
-                                        },
+                                      width: 150,
+                                      height: 150,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          frame.colors?[product.color],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                    const Text('Recipe Image, Tap To Zoom'),
+                                    const SizedBox(width: 20),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 5,
+                                          ),
+                                          child: Text(frame.name!),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 5,
+                                          ),
+                                          child: Text(product.color),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 5,
+                                          ),
+                                          child: Text(lens.name!),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 5,
+                                          ),
+                                          child: Text('${product.totalPrice}'),
+                                        ),
+                                        if (minusData!.leftEyeMinus!.isEmpty)
+                                          const Text('Normal Lens (Plain)'),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                            ],
-                          );
-                        },
+                                if (minusData.leftEyeMinus!.isNotEmpty)
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Divider(),
+                                  ),
+                                if (minusData.leftEyeMinus!.isNotEmpty)
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        'Lens Detail',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      _RowData(
+                                        title: 'Left Eye Minus',
+                                        data: minusData.leftEyeMinus!,
+                                      ),
+                                      _RowData(
+                                        title: 'Right Eye Minus',
+                                        data: minusData.rightEyeMinus!,
+                                      ),
+                                      _RowData(
+                                        title: 'Left Eye Plus',
+                                        data: minusData.leftEyePlus!,
+                                      ),
+                                      _RowData(
+                                        title: 'Right Eye Minus',
+                                        data: minusData.rightEyePlus!,
+                                      ),
+                                    ],
+                                  ),
+                                if (minusData.recipePath!.isNotEmpty)
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: Image.network(
+                                          minusData.recipePath!,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons
+                                                    .error_outline_rounded),
+                                                Text('Failed getting image'),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      const Text('Recipe Image, Tap To Zoom'),
+                                    ],
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                     const Divider(thickness: 3),
@@ -189,6 +194,33 @@ class OrderDetailPage extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          order.receiptNumber ?? '',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        IconButton(
+                          onPressed: order.receiptNumber!.contains('Update')
+                              ? null
+                              : () async {
+                                  await Clipboard.setData(
+                                    ClipboardData(text: order.receiptNumber!),
+                                  );
+                                  if (context.mounted) {
+                                    CherryToast.info(
+                                      toastPosition: Position.bottom,
+                                      animationDuration:
+                                          const Duration(milliseconds: 500),
+                                      title: const Text('Recipt Copied'),
+                                    ).show(context);
+                                  }
+                                },
+                          icon: const Icon(Icons.copy_rounded),
+                        ),
+                      ],
                     ),
                     Text('Shipper : ${order.shipper}'),
                     Text(
@@ -200,80 +232,108 @@ class OrderDetailPage extends StatelessWidget {
                     Text(address.detail),
                     Text('${address.subdistrict} ${address.city}'),
                     Text('${address.province} ${address.postalCode}'),
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          var printerGroup = 'printer';
-                          // TODO implement print, if possible
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text('Finding for a printer'),
-                                    const CircularProgressIndicator.adaptive(),
-                                    RadioListTile.adaptive(
-                                      value: 'HP',
-                                      groupValue: printerGroup,
-                                      onChanged: (value) {},
-                                    ),
-                                    RadioListTile.adaptive(
-                                      value: 'EPSON',
-                                      groupValue: printerGroup,
-                                      onChanged: (value) {},
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.print_rounded),
-                        label: const Text('Print Address'),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                            ),
-                            onPressed: () {
-                              showCustomDialog(context, value.order, false);
-                            },
-                            child: const Text(
-                              'Cancel Order',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Consumer<OrderProvider>(
-                            builder: (context, value, child) => ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .tertiaryContainer,
-                              ),
+                    if (order.orderStatus == 'packing')
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: double.maxFinite,
+                            child: ElevatedButton.icon(
                               onPressed: () {
-                                showCustomDialog(context, value.order, true);
+                                var printerGroup = 'printer';
+                                // TODO implement print, if possible
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text('Finding for a printer'),
+                                          const CircularProgressIndicator
+                                              .adaptive(),
+                                          RadioListTile.adaptive(
+                                            value: 'HP',
+                                            groupValue: printerGroup,
+                                            onChanged: (value) {},
+                                          ),
+                                          RadioListTile.adaptive(
+                                            value: 'EPSON',
+                                            groupValue: printerGroup,
+                                            onChanged: (value) {},
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
                               },
-                              child: const Text(
-                                'Input Receipt',
-                                textAlign: TextAlign.center,
-                              ),
+                              icon: const Icon(Icons.print_rounded),
+                              label: const Text('Print Address'),
                             ),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                  ),
+                                  onPressed: () {
+                                    showCustomDialog(
+                                        context, value.order, false);
+                                  },
+                                  child: const Text(
+                                    'Cancel Order',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Consumer<OrderProvider>(
+                                  builder: (context, value, child) =>
+                                      ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .tertiaryContainer,
+                                    ),
+                                    onPressed: () {
+                                      showCustomDialog(
+                                          context, value.order, true);
+                                    },
+                                    child: const Text(
+                                      'Input Receipt',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    if (order.orderStatus == 'Shipping')
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            var url = Uri.parse(
+                                'https://cekresi.com/?noresi=${order.receiptNumber}');
+                            if (!await launchUrl(url)) {
+                              if (context.mounted) {
+                                CherryToast.error(
+                                  toastPosition: Position.bottom,
+                                  title: const Text(
+                                      "Couldn't track receipt number"),
+                                ).show(context);
+                              }
+                            }
+                          },
+                          child: const Text('Track The Order'),
                         ),
-                      ],
-                    ),
+                      ),
                   ],
                 );
               },
