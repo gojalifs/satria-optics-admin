@@ -55,120 +55,132 @@ class OrderDetailPage extends StatelessWidget {
                         title: 'Finished At',
                         data: '${order.orderFinishTime?.toDate()}'),
                     const Divider(),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: order.cartProduct?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        var product = order.cartProduct![index];
-                        var frame = order.cartProduct![index].product;
-                        var lens = order.cartProduct![index].lens;
-                        var minusData = order.cartProduct?[index].minusData;
-                        return Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 150,
-                                  height: 150,
-                                  child: Image.network(
-                                    frame.colors?[product.color],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 5,
-                                      ),
-                                      child: Text(frame.name!),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 5,
-                                      ),
-                                      child: Text(product.color),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 5,
-                                      ),
-                                      child: Text(lens.name!),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 5,
-                                      ),
-                                      child: Text('${product.totalPrice}'),
-                                    ),
-                                    if (minusData!.leftEyeMinus!.isEmpty)
-                                      const Text('Normal Lens (Plain)'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            if (minusData.leftEyeMinus!.isNotEmpty)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Divider(),
-                              ),
-                            if (minusData.leftEyeMinus!.isNotEmpty)
-                              Column(
-                                children: [
-                                  const Text(
-                                    'Lens Detail',
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  _RowData(
-                                    title: 'Left Eye Minus',
-                                    data: minusData.leftEyeMinus!,
-                                  ),
-                                  _RowData(
-                                    title: 'Right Eye Minus',
-                                    data: minusData.rightEyeMinus!,
-                                  ),
-                                  _RowData(
-                                    title: 'Left Eye Plus',
-                                    data: minusData.leftEyePlus!,
-                                  ),
-                                  _RowData(
-                                    title: 'Right Eye Minus',
-                                    data: minusData.rightEyePlus!,
-                                  ),
-                                ],
-                              ),
-                            if (minusData.recipePath!.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: order.cartProduct?.length ?? 0,
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemBuilder: (context, index) {
+                          var product = order.cartProduct![index];
+                          var frame = order.cartProduct![index].product;
+                          var lens = order.cartProduct![index].lens;
+                          var minusData = order.cartProduct?[index].minusData;
+                          return Column(
+                            children: [
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: Image.network(
-                                      minusData.recipePath!,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.error_outline_rounded),
-                                            Text('Failed getting image'),
-                                          ],
-                                        );
-                                      },
+                                    width: 150,
+                                    height: 150,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        frame.colors?[product.color],
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                  const Text('Recipe Image, Tap To Zoom'),
+                                  const SizedBox(width: 20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 5,
+                                        ),
+                                        child: Text(frame.name!),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 5,
+                                        ),
+                                        child: Text(product.color),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 5,
+                                        ),
+                                        child: Text(lens.name!),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 5,
+                                        ),
+                                        child: Text('${product.totalPrice}'),
+                                      ),
+                                      if (minusData!.leftEyeMinus!.isEmpty)
+                                        const Text('Normal Lens (Plain)'),
+                                    ],
+                                  ),
                                 ],
                               ),
-                          ],
-                        );
-                      },
+                              if (minusData.leftEyeMinus!.isNotEmpty)
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Divider(),
+                                ),
+                              if (minusData.leftEyeMinus!.isNotEmpty)
+                                Column(
+                                  children: [
+                                    const Text(
+                                      'Lens Detail',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    _RowData(
+                                      title: 'Left Eye Minus',
+                                      data: minusData.leftEyeMinus!,
+                                    ),
+                                    _RowData(
+                                      title: 'Right Eye Minus',
+                                      data: minusData.rightEyeMinus!,
+                                    ),
+                                    _RowData(
+                                      title: 'Left Eye Plus',
+                                      data: minusData.leftEyePlus!,
+                                    ),
+                                    _RowData(
+                                      title: 'Right Eye Minus',
+                                      data: minusData.rightEyePlus!,
+                                    ),
+                                  ],
+                                ),
+                              if (minusData.recipePath!.isNotEmpty)
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: Image.network(
+                                        minusData.recipePath!,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.error_outline_rounded),
+                                              Text('Failed getting image'),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const Text('Recipe Image, Tap To Zoom'),
+                                  ],
+                                ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                     const Divider(thickness: 3),
                     const Text(
