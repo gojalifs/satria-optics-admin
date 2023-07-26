@@ -49,14 +49,6 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.page = 'cashier';
-              Navigator.of(context).pop();
-            },
-            leading: Image.asset('assets/icons/cashier.png'),
-            title: const Text('Cashier'),
-          ),
-          ListTile(
-            onTap: () {
               value.page = 'order-history';
               Navigator.of(context).pop();
             },
