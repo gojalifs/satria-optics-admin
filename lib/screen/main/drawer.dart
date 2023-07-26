@@ -5,6 +5,7 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
+import 'package:satria_optik_admin/screen/orders/all-order.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -49,7 +50,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.page = 'order-history';
+              value.page = AllOrderPage.pageName;
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/booking.png'),
