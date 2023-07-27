@@ -35,6 +35,31 @@ class OrderHelper extends FirestoreHelper {
     return orders;
   }
 
+  Future<List<OrderModel>> getRangedOrder(DateTime start, DateTime end) async {
+    List<OrderModel> orders = [];
+    var ref = db
+        .collectionGroup('transactions')
+        .where(
+          'orderMadeTime',
+          isGreaterThanOrEqualTo: start,
+          isLessThanOrEqualTo: end,
+        )
+        .where('orderStatus', isEqualTo: 'Done')
+        .orderBy('orderMadeTime', descending: true);
+    var data = await ref.get();
+    for (var element in data.docs) {
+      var data = element.data();
+
+      data['id'] = element.id;
+      var address = data['address'] as DocumentReference<Map<String, dynamic>>;
+      data['address'] = await address.get().then((value) => value.data());
+
+      orders.add(OrderModel.fromMap(data));
+    }
+    print(orders.length);
+    return orders;
+  }
+
   Future insertReceipt(
       String user, String id, bool isProceed, String data) async {
     try {

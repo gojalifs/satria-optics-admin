@@ -6,7 +6,7 @@ import 'package:satria_optik_admin/provider/base_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
-import 'package:satria_optik_admin/screen/new_order/order_detail_page.dart';
+import 'package:satria_optik_admin/screen/orders/order_detail_page.dart';
 
 import 'firebase_options.dart';
 import 'provider/auth_provider.dart';

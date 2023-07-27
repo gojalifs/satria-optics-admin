@@ -4,7 +4,7 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/main/custom_appbar.dart';
 import 'package:satria_optik_admin/screen/main/drawer.dart';
-import 'package:satria_optik_admin/screen/orders/all-order.dart';
+import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
 
 class MainPage extends StatelessWidget {

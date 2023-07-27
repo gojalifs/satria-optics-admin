@@ -5,7 +5,7 @@ import 'package:satria_optik_admin/custom/common_function.dart';
 import 'package:satria_optik_admin/model/order.dart';
 
 import 'package:satria_optik_admin/provider/order_provider.dart';
-import 'package:satria_optik_admin/screen/new_order/order_detail_page.dart';
+import 'package:satria_optik_admin/screen/orders/order_detail_page.dart';
 
 class NewOrderPage extends StatelessWidget {
   static String page = 'new-order';

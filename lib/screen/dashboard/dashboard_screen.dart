@@ -5,7 +5,7 @@ import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
-  static String page = 'dashboard';
+  static const String page = 'dashboard';
   const DashboardScreen({super.key});
 
   @override

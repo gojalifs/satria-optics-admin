@@ -5,7 +5,7 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
-import 'package:satria_optik_admin/screen/orders/all-order.dart';
+import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});

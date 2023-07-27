@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:satria_optik_admin/helper/order_helper.dart';
 import 'package:satria_optik_admin/model/order.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
@@ -7,9 +8,11 @@ class OrderProvider extends BaseProvider {
   final OrderHelper _orderHelper = OrderHelper();
   List<OrderModel> _newOrders = [];
   List<OrderModel> _shippings = [];
-  final List<OrderModel> _shippingOrder = [];
+  List<OrderModel> _rangedOrder = [];
   OrderModel _order = OrderModel();
   bool _isfirst = true;
+  DateTimeRange? _timeRange;
+  String? _range;
 
   /// TODO perubahan nilai ini jika ada notif masuk,
   /// diubah lg ke false jika halaman new order dibuka
@@ -17,9 +20,12 @@ class OrderProvider extends BaseProvider {
 
   List<OrderModel> get orders => _newOrders;
   List<OrderModel> get shippings => _shippings;
+  List<OrderModel> get rangedOrder => _rangedOrder;
   OrderModel get order => _order;
   bool get isFirst => _isfirst;
   bool get hasNewOrder => _hasNewOrder;
+  DateTimeRange? get timeRange => _timeRange;
+  String? get range => _range;
 
   set order(OrderModel order) {
     _order = order;
@@ -28,6 +34,15 @@ class OrderProvider extends BaseProvider {
 
   set hasNewOrder(bool status) {
     _hasNewOrder = status;
+    notifyListeners();
+  }
+
+  set timeRange(DateTimeRange? range) {
+    _timeRange = range;
+    var format = DateFormat('yMMMMd');
+    var start = format.format(range?.start ?? DateTime.now());
+    var end = format.format(range?.end ?? DateTime.now());
+    _range = '$start - $end';
     notifyListeners();
   }
 
@@ -50,6 +65,22 @@ class OrderProvider extends BaseProvider {
     notifyListeners();
   }
 
+  Future getRangedOrders() async {
+    state = ConnectionState.active;
+    await Future.delayed(Duration(seconds: 5));
+
+    var start = _timeRange?.start ?? DateTime.now();
+    var end = _timeRange?.end ?? DateTime.now();
+    try {
+      _rangedOrder = await _orderHelper.getRangedOrder(start, end);
+    } catch (e) {
+      throw 'something error when trying to get data';
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
   Future insertReceipt(bool isproceed, String data) async {
     try {
       if (isproceed) {
@@ -65,7 +96,7 @@ class OrderProvider extends BaseProvider {
         _newOrders[a] = _order;
 
         /// add order into shipping order and remove from new order page
-        _shippingOrder.add(_order);
+        _shippings.add(_order);
         _newOrders.remove(_order);
       } else {
         await _orderHelper.insertReceipt(
