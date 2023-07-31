@@ -5,8 +5,11 @@ import 'package:satria_optik_admin/custom/custom_theme.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
+import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 import 'package:satria_optik_admin/screen/orders/order_detail_page.dart';
+import 'package:satria_optik_admin/screen/products/add_frame_stock_screen.dart';
+import 'package:satria_optik_admin/screen/products/product_detail_screen.dart';
 
 import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
@@ -32,6 +35,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => OrderProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -42,8 +46,15 @@ class MyApp extends StatelessWidget {
           LoginPage.route: (context) => const LoginPage(),
           MainPage.route: (context) => const MainPage(),
           OrderDetailPage.route: (context) => const OrderDetailPage(),
+          ProductDetailPage.route: (context) => const ProductDetailPage(),
         },
         onGenerateRoute: (settings) {
+          if (settings.name == AddFrameStockPage.route) {
+            var args = settings.arguments as Map<String, dynamic>;
+            return MaterialPageRoute(
+              builder: (context) => AddFrameStockPage(colorData: args),
+            );
+          }
           assert(false, 'Need to implement ${settings.name} on routes');
           return null;
         },

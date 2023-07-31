@@ -4,10 +4,9 @@ import 'package:flutter/foundation.dart';
 
 class GlassFrame {
   final String? id;
-  bool? favoritedBy;
   final List<String>? imageUrl;
   final String? name;
-  final int? price;
+  final String? price;
   final String? rating;
   final String? description;
   final String? type;
@@ -18,7 +17,6 @@ class GlassFrame {
 
   GlassFrame({
     this.id,
-    this.favoritedBy,
     this.imageUrl,
     this.name,
     this.price,
@@ -34,7 +32,6 @@ class GlassFrame {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'favoritedBy': favoritedBy,
       'imageUrl': imageUrl,
       'name': name,
       'price': price,
@@ -51,11 +48,10 @@ class GlassFrame {
   factory GlassFrame.fromMap(Map<String, dynamic> map) {
     return GlassFrame(
       id: map['id'],
-      favoritedBy: map['favoritedBy'],
       imageUrl: List<String>.from(map['imageUrl']),
       name: map['name'],
-      price: map['price']?.toInt(),
-      rating: map['rating'].toString(),
+      price: map['price'],
+      rating: map['rating'],
       description: map['description'],
       type: map['type'],
       shape: map['shape'],
@@ -74,7 +70,7 @@ class GlassFrame {
     String? id,
     List<String>? imageUrl,
     String? name,
-    int? price,
+    String? price,
     String? rating,
     String? description,
     String? type,
@@ -109,7 +105,6 @@ class GlassFrame {
 
     return other is GlassFrame &&
         other.id == id &&
-        other.favoritedBy == favoritedBy &&
         listEquals(other.imageUrl, imageUrl) &&
         other.name == name &&
         other.price == price &&
@@ -125,7 +120,6 @@ class GlassFrame {
   @override
   int get hashCode {
     return id.hashCode ^
-        favoritedBy.hashCode ^
         imageUrl.hashCode ^
         name.hashCode ^
         price.hashCode ^

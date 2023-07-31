@@ -18,22 +18,6 @@ class CustomTheme {
       bodyMedium: TextStyle(fontSize: 16),
       bodySmall: TextStyle(fontSize: 14),
     ),
-    /* 
-      Input Area
-     */
-    inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(100),
-      ),
-      activeIndicatorBorder: const BorderSide(
-        color: Colors.yellow,
-      ),
-      focusColor: Colors.yellow,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(100),
-        borderSide: const BorderSide(color: Colors.purple),
-      ),
-    ),
 
     /* 
       Button Section

@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
+import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
+import 'package:satria_optik_admin/screen/products/lens_screen.dart';
+import 'package:satria_optik_admin/screen/products/products_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -57,12 +60,24 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Orders'),
           ),
           ListTile(
-            onTap: () {
-              value.page = 'product';
+            onTap: () async {
+              value.page = ProductListPage.page;
               Navigator.of(context).pop();
+              await Provider.of<ProductProvider>(context, listen: false)
+                  .getProducts('products');
             },
-            leading: Image.asset('assets/icons/booking.png'),
-            title: const Text('Products (Lens, Frames, Acc)'),
+            leading: Image.asset('assets/icons/glasses.png'),
+            title: const Text('Frames'),
+          ),
+          ListTile(
+            onTap: () async {
+              value.page = LensPage.page;
+              Navigator.of(context).pop();
+              await Provider.of<ProductProvider>(context, listen: false)
+                  .getProducts('lens');
+            },
+            leading: Image.asset('assets/icons/lens.png'),
+            title: const Text('Lens'),
           ),
           ListTile(
             onTap: () {
