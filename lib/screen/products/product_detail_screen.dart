@@ -34,7 +34,6 @@ class ProductDetailPage extends StatelessWidget {
           Consumer<ProductProvider>(
             builder: (context, value, child) {
               var frame = value.frame;
-              var stock = frame.colors?.keys.toList().join(', ');
               return ListView(
                 primary: false,
                 shrinkWrap: true,
@@ -56,18 +55,12 @@ class ProductDetailPage extends StatelessWidget {
                       title: 'Frame Shape', detail: '${frame.shape}'),
                   ProductDetailTile(
                     title: 'Frame Stock',
-                    detail: stock ?? '',
+                    detail: 'Tap To See The Details',
                     isStock: true,
                     frameData: frame,
                   ),
                   ProductDetailTile(
                       title: 'Frame Type', detail: '${frame.type}'),
-                  ProductDetailTile(
-                      title: 'Frame Images Url', detail: '${frame.imageUrl}'),
-                  ProductDetailTile(
-                    title: 'Frame Images By Color',
-                    detail: '${frame.colors?.keys.toList().join(', ')}',
-                  ),
                 ],
               );
             },
@@ -124,13 +117,14 @@ class ImageGrid extends StatelessWidget {
     }
 
     return GridView.builder(
-      itemCount: images!.length + 1,
+      itemCount: isColor ? images?.length : images!.length + 1,
+      padding: const EdgeInsets.symmetric(vertical: 10),
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        if (index == images!.length) {
+        if (index == images!.length && !isColor) {
           return Container(
             width: double.maxFinite,
             margin: const EdgeInsets.all(25),
@@ -303,7 +297,9 @@ class ProductDetailTile extends StatelessWidget {
                       detail,
                     ),
                   ),
-                  const Expanded(child: Icon(Icons.edit_rounded)),
+                  const Expanded(
+                    child: Icon(Icons.edit_rounded),
+                  ),
                 ],
               ),
             ),
