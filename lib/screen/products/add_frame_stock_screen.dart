@@ -99,8 +99,31 @@ class _AddFrameStockPageState extends State<AddFrameStockPage> {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    colorData.remove(color);
-                                    setState(() {});
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        content: const Text(
+                                            'This action will immediately delete data from database, are you sure?'),
+                                        title: const Text('Are You Sure?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              colorData.remove(color);
+                                              value.deleteImage(color);
+                                              setState(() {});
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Yes, delete'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   },
                                   icon: const Icon(
                                       Icons.highlight_remove_rounded),
@@ -174,10 +197,10 @@ class _AddFrameStockPageState extends State<AddFrameStockPage> {
                 onPressed: value.state == ConnectionState.active
                     ? null
                     : () async {
-                        Map<String, dynamic> colorData = value.tempVariantData!;
-                        await Provider.of<ProductProvider>(context,
-                                listen: false)
-                            .uploadImage(colorData);
+                        await Provider.of<ProductProvider>(
+                          context,
+                          listen: false,
+                        ).uploadImage();
                         setState(() {});
                       },
                 child: value.state == ConnectionState.active

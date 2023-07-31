@@ -52,7 +52,8 @@ class ProductHelper extends FirestoreHelper {
 
   Future<String> uploadImage(String id, File file, String color) async {
     var ref = storageRef
-        .child('products/frame')
+        .child('products')
+        .child('frame')
         .child(id)
         .child('variants')
         .child(color);
@@ -64,5 +65,20 @@ class ProductHelper extends FirestoreHelper {
     } catch (e) {
       throw 'failed to upload, try again later';
     }
+  }
+
+  Future deleteImage(String id, String color) async {
+    var ref = storageRef
+        .child('products')
+        .child('frame')
+        .child(id)
+        .child('variants')
+        .child(color);
+
+    // try {
+    await ref.delete();
+    // } catch (e) {
+    //   throw 'failed to delete image, try again later';
+    // }
   }
 }

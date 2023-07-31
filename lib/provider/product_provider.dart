@@ -99,7 +99,7 @@ class ProductProvider extends BaseProvider {
     }
   }
 
-  Future uploadImage(Map<String, dynamic> colorsData) async {
+  Future uploadImage() async {
     state = ConnectionState.active;
     try {
       Map<String, dynamic> newMap = Map.from(_tempVariantData!);
@@ -113,7 +113,7 @@ class ProductProvider extends BaseProvider {
         final value = entry.value;
 
         resultUrl = await _helper.uploadImage(
-          frame.id!,
+          _frame.id!,
           File(value['tempPath']),
           key,
         );
@@ -130,6 +130,19 @@ class ProductProvider extends BaseProvider {
     } finally {
       notifyListeners();
       state = ConnectionState.done;
+    }
+  }
+
+  Future deleteImage(String color) async {
+    state = ConnectionState.active;
+    try {
+      await _helper.deleteImage(_frame.id!, color);
+      await _helper.updateFrameColors(_frame.id!, _tempVariantData!);
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
     }
   }
 
