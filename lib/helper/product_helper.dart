@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:satria_optik_admin/helper/firebase_helper.dart';
 import 'package:satria_optik_admin/model/glass_frame.dart';
 import 'package:satria_optik_admin/model/lens.dart';
@@ -50,13 +53,22 @@ class ProductHelper extends FirestoreHelper {
     return lenses;
   }
 
-  Future<String> uploadImage(String id, File file, String color) async {
-    var ref = storageRef
-        .child('products')
-        .child('frame')
-        .child(id)
-        .child('variants')
-        .child(color);
+  Future<String> uploadImage(String id, File file, {String? color}) async {
+    Reference ref;
+    if (color != null) {
+      ref = storageRef
+          .child('products')
+          .child('frame')
+          .child(id)
+          .child('variants')
+          .child(color);
+    } else {
+      ref = storageRef
+          .child('products')
+          .child('frame')
+          .child(id)
+          .child(XFile(file.path).name);
+    }
 
     try {
       await ref.putFile(file);
@@ -75,10 +87,23 @@ class ProductHelper extends FirestoreHelper {
         .child('variants')
         .child(color);
 
-    // try {
-    await ref.delete();
-    // } catch (e) {
-    //   throw 'failed to delete image, try again later';
-    // }
+    try {
+      await ref.delete();
+    } catch (e) {
+      throw 'failed to delete image, try again later';
+    }
+  }
+
+  Future deleteMainImage(String id, String url) async {
+    Reference ref = FirebaseStorage.instance.refFromURL(url);
+    print(ref);
+    try {
+      await ref.delete();
+      await db.collection('products').doc(id).update({
+        'imageUrl': FieldValue.arrayRemove([url]),
+      });
+    } catch (e) {
+      throw 'failed to delete image, try again later';
+    }
   }
 }

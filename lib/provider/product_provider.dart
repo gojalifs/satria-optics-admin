@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
@@ -115,7 +116,7 @@ class ProductProvider extends BaseProvider {
         resultUrl = await _helper.uploadImage(
           _frame.id!,
           File(value['tempPath']),
-          key,
+          color: key,
         );
         if (value is Map) {
           value.remove('tempPath');
@@ -133,11 +134,43 @@ class ProductProvider extends BaseProvider {
     }
   }
 
+  Future uploadMainImage(String path) async {
+    state = ConnectionState.active;
+    try {
+      String url = await _helper.uploadImage(_frame.id!, File(path));
+      print('url $url');
+      await _helper.updateFrame(_frame.id!, {
+        'imageUrl': FieldValue.arrayUnion([url])
+      });
+      _frame.imageUrl?.add(url);
+      print('sukses 1');
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      print('sukses 2');
+
+      notifyListeners();
+    }
+  }
+
   Future deleteImage(String color) async {
     state = ConnectionState.active;
     try {
       await _helper.deleteImage(_frame.id!, color);
       await _helper.updateFrameColors(_frame.id!, _tempVariantData!);
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
+  Future deleteMainImage(String url) async {
+    state = ConnectionState.active;
+    try {
+      await _helper.deleteMainImage(_frame.id!, url);
     } catch (e) {
       rethrow;
     } finally {

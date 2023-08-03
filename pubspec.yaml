@@ -42,6 +42,7 @@ dependencies:
   flutter_image_compress: ^2.0.4
   image_picker: ^1.0.1
   intl: ^0.18.1
+  loading_animation_widget: ^1.2.0+4
   path_provider: ^2.0.15
   provider: ^6.0.5
   shimmer: ^3.0.0

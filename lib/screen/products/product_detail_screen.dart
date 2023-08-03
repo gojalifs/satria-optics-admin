@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -133,7 +135,43 @@ class ImageGrid extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            await picker(context, takeCamera: true);
+                          },
+                          child: const Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.photo_camera_rounded),
+                              Text('Camera'),
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            await picker(context, takeCamera: false);
+                          },
+                          child: const Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.photo_rounded),
+                              Text('Gallery'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
               icon: const Icon(
                 Icons.add_circle_rounded,
                 color: Colors.black,
@@ -142,26 +180,139 @@ class ImageGrid extends StatelessWidget {
             ),
           );
         }
-        return Image.network(
-          images[index],
-          loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent? loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Image.network(
+                images[index],
+                fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.broken_image_rounded);
+                },
               ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.broken_image_rounded);
-          },
+            ),
+            if (!isColor)
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                      Colors.white.withOpacity(0.7),
+                    ),
+                  ),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          Consumer<ProductProvider>(
+                            builder: (context, value, child) => TextButton(
+                              onPressed: () async {
+                                await value.deleteMainImage(images![index]);
+                                frame.imageUrl?.remove(images[index]);
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              child: value.state == ConnectionState.active
+                                  ? const SizedBox(
+                                      width: 50,
+                                      child: LinearProgressIndicator(),
+                                    )
+                                  : const Text('Yes, delete'),
+                            ),
+                          ),
+                        ],
+                        title: const Text('Are you sure to delete?'),
+                        content: SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: Image.network(images![index]),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.delete_forever_rounded),
+                ),
+              ),
+          ],
         );
       },
     );
+  }
+
+  Future picker(BuildContext context, {required bool takeCamera}) async {
+    String path = await Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    ).pickImage(takeCamera: takeCamera);
+    if (context.mounted) {
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await Provider.of<ProductProvider>(context, listen: false)
+                      .uploadMainImage(path);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    CherryToast.info(
+                      title: const Text('Image Uploaded'),
+                    ).show(context);
+                  }
+                } catch (e) {
+                  CherryToast.error(title: Text('$e')).show(context);
+                }
+              },
+              child: Consumer<ProductProvider>(
+                builder: (context, value, child) {
+                  if (value.state == ConnectionState.active) {
+                    return const SizedBox(
+                        width: 50, child: LinearProgressIndicator());
+                  }
+                  return const Text('Upload');
+                },
+              ),
+            ),
+          ],
+          content: SizedBox(
+            width: 300,
+            height: 300,
+            child: Image.file(File(path), fit: BoxFit.cover),
+          ),
+        ),
+      );
+    }
   }
 }
 
