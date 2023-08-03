@@ -96,7 +96,6 @@ class ProductHelper extends FirestoreHelper {
 
   Future deleteMainImage(String id, String url) async {
     Reference ref = FirebaseStorage.instance.refFromURL(url);
-    print(ref);
     try {
       await ref.delete();
       await db.collection('products').doc(id).update({

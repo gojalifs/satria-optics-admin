@@ -138,17 +138,14 @@ class ProductProvider extends BaseProvider {
     state = ConnectionState.active;
     try {
       String url = await _helper.uploadImage(_frame.id!, File(path));
-      print('url $url');
       await _helper.updateFrame(_frame.id!, {
         'imageUrl': FieldValue.arrayUnion([url])
       });
       _frame.imageUrl?.add(url);
-      print('sukses 1');
     } catch (e) {
       rethrow;
     } finally {
       state = ConnectionState.done;
-      print('sukses 2');
 
       notifyListeners();
     }

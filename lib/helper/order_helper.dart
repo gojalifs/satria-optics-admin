@@ -7,7 +7,6 @@ class OrderHelper extends FirestoreHelper {
   getNotification() {}
 
   Future<List<OrderModel>> getNewOrder(String orderStatus) async {
-    print('object $orderStatus');
     List<OrderModel> orders = [];
     var data = await db
         .collectionGroup('transactions')
@@ -56,7 +55,6 @@ class OrderHelper extends FirestoreHelper {
 
       orders.add(OrderModel.fromMap(data));
     }
-    print(orders.length);
     return orders;
   }
 
