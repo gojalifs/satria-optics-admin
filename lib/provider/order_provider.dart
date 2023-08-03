@@ -67,7 +67,6 @@ class OrderProvider extends BaseProvider {
 
   Future getRangedOrders() async {
     state = ConnectionState.active;
-    await Future.delayed(Duration(seconds: 5));
 
     var start = _timeRange?.start ?? DateTime.now();
     var end = _timeRange?.end ?? DateTime.now();
