@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
+import 'package:satria_optik_admin/provider/lens_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
@@ -73,8 +74,8 @@ class CustomDrawer extends StatelessWidget {
             onTap: () async {
               value.page = LensPage.page;
               Navigator.of(context).pop();
-              await Provider.of<ProductProvider>(context, listen: false)
-                  .getProducts('lens');
+              await Provider.of<LensProvider>(context, listen: false)
+                  .getLenses();
             },
             leading: Image.asset('assets/icons/lens.png'),
             title: const Text('Lens'),

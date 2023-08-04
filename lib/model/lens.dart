@@ -4,12 +4,14 @@ class Lens {
   final String? id;
   final String? name;
   final String? description;
+  final String? imageUrl;
   final int? price;
 
   Lens({
     this.id,
     this.name,
     this.description,
+    this.imageUrl,
     this.price,
   });
 
@@ -18,6 +20,7 @@ class Lens {
       'id': id,
       'name': name,
       'description': description,
+      'imageUrl': imageUrl,
       'price': price,
     };
   }
@@ -27,6 +30,7 @@ class Lens {
       id: map['id'],
       name: map['name'],
       description: map['description'],
+      imageUrl: map['imageUrl'],
       price: map['price']?.toInt(),
     );
   }
@@ -43,11 +47,37 @@ class Lens {
         other.id == id &&
         other.name == name &&
         other.description == description &&
+        other.imageUrl == imageUrl &&
         other.price == price;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ description.hashCode ^ price.hashCode;
+    return id.hashCode ^
+        name.hashCode ^
+        description.hashCode ^
+        imageUrl.hashCode ^
+        price.hashCode;
+  }
+
+  Lens copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? imageUrl,
+    int? price,
+  }) {
+    return Lens(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      price: price ?? this.price,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Lens(id: $id, name: $name, description: $description, imageUrl: $imageUrl, price: $price)';
   }
 }
