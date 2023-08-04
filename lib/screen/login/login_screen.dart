@@ -3,6 +3,8 @@ import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
+import 'package:satria_optik_admin/provider/home_provider.dart';
+import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
 class LoginPage extends StatelessWidget {
@@ -92,6 +94,9 @@ class LoginPage extends StatelessWidget {
                                     ),
                                     toastPosition: Position.bottom,
                                   ).show(context);
+                                  Provider.of<HomeProvider>(context,
+                                          listen: false)
+                                      .page = DashboardScreen.page;
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       MainPage.route, (route) => false);
                                 }
