@@ -62,14 +62,10 @@ class LensPage extends StatelessWidget {
                         Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
-                          child: const Card(),
+                          child: const Card(
+                            color: Colors.white,
+                          ),
                         ),
-                        // CircularProgressIndicator(
-                        //   value: loadingProgress?.expectedTotalBytes != null
-                        //       ? loadingProgress!.cumulativeBytesLoaded /
-                        //           loadingProgress.expectedTotalBytes!
-                        //       : null,
-                        // ),
                       ],
                     );
                   },
