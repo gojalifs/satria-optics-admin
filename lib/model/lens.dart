@@ -31,7 +31,7 @@ class Lens {
       name: map['name'],
       description: map['description'],
       imageUrl: map['imageUrl'],
-      price: map['price']?.toInt(),
+      price: map['price'],
     );
   }
 

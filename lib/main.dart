@@ -10,6 +10,7 @@ import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 import 'package:satria_optik_admin/screen/orders/order_detail_page.dart';
 import 'package:satria_optik_admin/screen/products/add_frame_stock_screen.dart';
+import 'package:satria_optik_admin/screen/products/lens_detail_screen.dart';
 import 'package:satria_optik_admin/screen/products/product_detail_screen.dart';
 
 import 'firebase_options.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
           MainPage.route: (context) => const MainPage(),
           OrderDetailPage.route: (context) => const OrderDetailPage(),
           ProductDetailPage.route: (context) => const ProductDetailPage(),
+          LensDetailPage.route: (context) => const LensDetailPage(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == AddFrameStockPage.route) {
