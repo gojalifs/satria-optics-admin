@@ -17,7 +17,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
-      builder: (context, value, child) => NavigationDrawer(
+      builder: (context, home, child) => NavigationDrawer(
         children: [
           DrawerHeader(
             child: Center(
@@ -26,7 +26,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.page = DashboardScreen.page;
+              home.page = DashboardScreen.page;
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/store.png'),
@@ -34,7 +34,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              value.page = 'new-order';
+              home.page = 'new-order';
               Navigator.of(context).pop();
               await Provider.of<OrderProvider>(context, listen: false)
                   .getNewOrder('packing');
@@ -44,7 +44,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              value.page = 'on-delivery';
+              home.page = 'on-delivery';
               Navigator.of(context).pop();
               await Provider.of<OrderProvider>(context, listen: false)
                   .getNewOrder('Shipping');
@@ -54,7 +54,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              value.page = AllOrderPage.pageName;
+              home.page = AllOrderPage.pageName;
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/booking.png'),
@@ -62,7 +62,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              value.page = ProductListPage.page;
+              home.page = ProductListPage.page;
               Navigator.of(context).pop();
               await Provider.of<ProductProvider>(context, listen: false)
                   .getProducts('products');
@@ -72,7 +72,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              value.page = LensPage.page;
+              home.page = LensPage.page;
               Navigator.of(context).pop();
               await Provider.of<LensProvider>(context, listen: false)
                   .getLenses();
@@ -98,7 +98,7 @@ class CustomDrawer extends StatelessWidget {
           /// TODO Data Admin, muncul di owner
           ListTile(
             onTap: () {
-              value.page = 'admins';
+              home.page = 'admins';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/worker.png'),
@@ -107,7 +107,7 @@ class CustomDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             onTap: () {
-              value.page = 'setting';
+              home.page = 'setting';
               Navigator.of(context).pop();
             },
             leading: Image.asset('assets/icons/setting.png'),
