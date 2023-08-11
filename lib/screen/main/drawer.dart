@@ -80,14 +80,6 @@ class CustomDrawer extends StatelessWidget {
             leading: Image.asset('assets/icons/lens.png'),
             title: const Text('Lens'),
           ),
-          ListTile(
-            onTap: () {
-              value.page = 'chat';
-              Navigator.of(context).pop();
-            },
-            leading: Image.asset('assets/icons/demand.png'),
-            title: const Text('Chats'),
-          ),
 
           /// TODO jika bukan owner, maka hilangkan
           Consumer<HomeProvider>(
