@@ -10,6 +10,7 @@ import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/products/lens_screen.dart';
 import 'package:satria_optik_admin/screen/products/products_screen.dart';
+import 'package:satria_optik_admin/screen/sales_report/report_monthly_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -84,13 +85,40 @@ class CustomDrawer extends StatelessWidget {
           /// TODO jika bukan owner, maka hilangkan
           Consumer<HomeProvider>(
             builder: (context, value, child) {
-              return ListTile(
-                onTap: () {
-                  value.page = 'report';
-                  Navigator.of(context).pop();
-                },
-                leading: Image.asset('assets/icons/sales.png'),
-                title: const Text('Sales Report'),
+              return ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.symmetric(horizontal: 36),
+                expandedAlignment: Alignment.centerLeft,
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                title: ListTile(
+                    leading: Image.asset('assets/icons/sales.png'),
+                    title: const Text('Sales Report')),
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed(MonthlyReportPage.route);
+                    },
+                    child: const Text('Monthly Report'),
+                  ),
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      value.page = 'report';
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Yearly Report'),
+                  ),
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      value.page = 'report';
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Product Report'),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               );
             },
           ),
