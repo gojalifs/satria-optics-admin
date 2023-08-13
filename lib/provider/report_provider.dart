@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:cr_file_saver/file_saver.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:satria_optik_admin/helper/report_helper.dart';
 import 'package:satria_optik_admin/model/report.dart';
 import 'package:satria_optik_admin/model/report_data_source.dart';
@@ -37,42 +35,17 @@ class ReportProvider extends BaseProvider {
   }
 
   Future exportToExcel(GlobalKey<SfDataGridState> key) async {
-    print('try to export');
-    // try {
-    // var status = await Permission.storage.status;
-    bool isGranted = await CRFileSaver.requestWriteExternalStoragePermission();
-    if (!isGranted) {
-      if (Platform.isAndroid) {
-        //   var androidInfo = await DeviceInfoPlugin().androidInfo;
-        //   var androidVersion = androidInfo.version.sdkInt;
-        //   print('android v $androidVersion');
-        //   if (androidVersion >= 33) {
-        //     print('a');
-        //     status = await Permission.manageExternalStorage.request();
-        //     print(status);
-        //   } else {
-        //     print('b');
-        //     status = await Permission.storage.request();
-        //   }
-        // }
-        // if (status == PermissionStatus.denied) {
-        //   throw 'Need Access To Storage';
-        // }
-      }
+    try {
+      var tempPath = await getTemporaryDirectory();
+      var filename = 'report.xlsx';
+      final Workbook workbook = key.currentState!.exportToExcelWorkbook();
+      final List<int> bytes = workbook.saveAsStream();
+      File file = File('${tempPath.path}/$filename');
+      await file.writeAsBytes(bytes);
+      CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
+          sourceFilePath: file.path, destinationFileName: filename));
+    } catch (e) {
+      throw 'Failed to export to excel. Please try again.';
     }
-
-    var tempPath = await getTemporaryDirectory();
-    var filename = 'report.xlsx';
-    final Workbook workbook = key.currentState!.exportToExcelWorkbook();
-    final List<int> bytes = workbook.saveAsStream();
-    File file = File('${tempPath.path}/$filename');
-    await file.writeAsBytes(bytes);
-    CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
-        sourceFilePath: file.path, destinationFileName: filename));
-    print('exported');
-    // } catch (e) {
-    // print(e);
-    // throw 'Failed to export to excel. Please try again.';
-    // }
   }
 }
