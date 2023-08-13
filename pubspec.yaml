@@ -33,7 +33,6 @@ dependencies:
   cloud_firestore: ^4.8.3
   cr_file_saver: ^0.0.2+1
   cupertino_icons: ^1.0.2
-  device_info_plus: ^9.0.3
   easy_refresh: ^3.3.2+1
   firebase_auth: ^4.7.1
   firebase_core: ^2.15.0
@@ -48,7 +47,6 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   month_year_picker: ^0.3.0+1
   path_provider: ^2.0.15
-  permission_handler: ^10.4.3
   provider: ^6.0.5
   shimmer: ^3.0.0
   syncfusion_flutter_datagrid: ^22.2.8
