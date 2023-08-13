@@ -35,11 +35,11 @@ class _MonthlyReportPageState extends State<MonthlyReportPage> {
           child: Consumer<ReportProvider>(
             builder: (context, value, child) => ElevatedButton(
               onPressed: () async {
-                // try {
-                await value.exportToExcel(_key);
-                // } catch (e) {
-                //   CherryToast.error(title: Text('$e')).show(context);
-                // }
+                try {
+                  await value.exportToExcel(_key);
+                } catch (e) {
+                  CherryToast.error(title: Text('$e')).show(context);
+                }
               },
               child: const Text('Export To Excel'),
             ),
@@ -93,69 +93,49 @@ class _MonthlyReportPageState extends State<MonthlyReportPage> {
             )),
             SizedBox(
               child: Consumer<ReportProvider>(
-                  builder: (context, reports, child) {
-                if (reports.dataSource == null) {
-                  return const SizedBox();
-                }
-                return SfDataGrid(
-                  shrinkWrapRows: true,
-                  allowColumnsResizing: true,
-                  verticalScrollPhysics: const NeverScrollableScrollPhysics(),
-                  showHorizontalScrollbar: true,
-                  columnWidthMode: ColumnWidthMode.fitByCellValue,
-                  key: _key,
-                  source: reports.dataSource!,
-                  columns: [
-                    GridColumn(
-                      columnName: 'ID Order',
-                      label: const Center(
+                builder: (context, reports, child) {
+                  if (reports.dataSource == null) {
+                    return const SizedBox();
+                  }
+                  return SfDataGrid(
+                    shrinkWrapRows: true,
+                    allowColumnsResizing: true,
+                    verticalScrollPhysics: const NeverScrollableScrollPhysics(),
+                    showHorizontalScrollbar: true,
+                    columnWidthMode: ColumnWidthMode.fitByCellValue,
+                    key: _key,
+                    source: reports.dataSource!,
+                    columns: [
+                      GridColumn(
+                        columnName: 'ID Order',
+                        label: const Center(
+                            child: Text(
+                          'ID Order',
+                          style: TextStyle(fontSize: 20),
+                        )),
+                      ),
+                      GridColumn(
+                        columnName: 'Tanggal',
+                        label: const Center(
                           child: Text(
-                        'ID Order',
-                        style: TextStyle(fontSize: 20),
-                      )),
-                    ),
-                    GridColumn(
-                      columnName: 'Tanggal',
-                      label: const Center(
-                        child: Text(
-                          'Tanggal',
-                          style: TextStyle(fontSize: 20),
+                            'Tanggal',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
                       ),
-                    ),
-                    GridColumn(
-                      columnName: 'Total',
-                      label: const Center(
-                        child: Text(
-                          'Total',
-                          style: TextStyle(fontSize: 20),
+                      GridColumn(
+                        columnName: 'Total',
+                        label: const Center(
+                          child: Text(
+                            'Total',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              }
-                  // DataTable(
-                  //   columns: const [
-                  //     DataColumn(label: Text('ID Order')),
-                  //     DataColumn(label: Text('Tanggal')),
-                  //     DataColumn(label: Text('Total')),
-                  //   ],
-                  //   rows: reports.reports
-                  //       .map(
-                  //         (e) => DataRow(
-                  //           cells: [
-                  //             DataCell(Text(e.id)),
-                  //             DataCell(Text(
-                  //               DateFormat('MMMM dd, yyyy').format(e.date),
-                  //             )),
-                  //             DataCell(Text(formatToRupiah('${e.nominal}'))),
-                  //           ],
-                  //         ),
-                  //       )
-                  //       .toList(),
-                  // ),
-                  ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),
