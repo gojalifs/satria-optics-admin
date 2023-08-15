@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:satria_optik_admin/custom/custom_theme.dart';
 import 'package:satria_optik_admin/firebase_options.dart';
+import 'package:satria_optik_admin/provider/admins_provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => LensProvider()),
         ChangeNotifierProvider(create: (context) => ReportProvider()),
+        ChangeNotifierProvider(create: (context) => AdminProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
