@@ -1,5 +1,8 @@
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satria_optik_admin/model/admins.dart';
+import 'package:satria_optik_admin/provider/admins_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
@@ -54,10 +57,123 @@ class MainPage extends StatelessWidget {
   }
 
   FloatingActionButton? makeFAB(BuildContext context) {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    final key = GlobalKey<FormState>();
+
     var page = Provider.of<HomeProvider>(context).page;
     if (page == ProductListPage.page || page == LensPage.page) {
       return FloatingActionButton(
         onPressed: () {},
+        child: const Icon(Icons.add_rounded),
+      );
+    } else if (page == AdminScreen.page) {
+      return FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+                left: 20,
+                right: 20,
+              ),
+              child: Form(
+                key: key,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Add Data',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    TextFormField(
+                      controller: nameController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'This Field is Mandatory';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text('Name'),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'This Field is Mandatory';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text('email'),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.visiblePassword,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'This Field is Mandatory';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text('Password'),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel')),
+                        Consumer<AdminProvider>(
+                          builder: (context, value, child) => TextButton(
+                            onPressed: () async {
+                              if (key.currentState!.validate()) {
+                                try {
+                                  value.admin = Admin(
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                  await value.addAdmin();
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                    CherryToast.success(
+                                      title: const Text('New Admin Added'),
+                                    ).show(context);
+                                  }
+                                } catch (e) {
+                                  CherryToast.error(title: Text('$e'))
+                                      .show(context);
+                                }
+                              }
+                            },
+                            child: const Text('Save'),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
         child: const Icon(Icons.add_rounded),
       );
     } else {

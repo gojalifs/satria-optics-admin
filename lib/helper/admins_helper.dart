@@ -19,10 +19,29 @@ class AdminHelper extends FirestoreHelper {
   Future setStatus(Admin admin) async {
     try {
       var ref = db.collection('admins').doc(admin.id);
-      print(admin.toMap());
       await ref.update(admin.toMap());
     } catch (e) {
       throw 'Failed to update data, try again later';
+    }
+  }
+
+  Future<String> addAdmin(Admin admin) async {
+    try {
+      var ref = db.collection('admins');
+      var data = await ref.add(admin.toMap());
+      var id = data.id;
+      return id;
+    } catch (e) {
+      throw 'Failed to add data, try again later';
+    }
+  }
+
+  Future deleteAdmin(String id) async {
+    try {
+      var ref = db.collection('admins').doc(id);
+      await ref.delete();
+    } catch (e) {
+      throw 'Failed to delete admin';
     }
   }
 }

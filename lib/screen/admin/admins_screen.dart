@@ -55,15 +55,44 @@ class AdminScreen extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        // value.admin = admin;
-                        // Admin copiedAdmin = admin.copyWith(isBanned: )
-                        // print('1 ${admin.toMap()}');
-
+                        value.admin = admin;
                         await value.setStatus();
                       },
                       child: admin.isBanned!
                           ? const Text('Activate')
                           : const Text('Deactivate'),
+                    ),
+                    IconButton(
+                      onPressed: (admin.isBanned! || value.admins.length <= 1)
+                          ? null
+                          : () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text(
+                                      'Are You Sure To Delete This Admin?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        value.admin = admin;
+                                        await value.deleteAdmin();
+                                        if (context.mounted) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: const Text('Yes, Delete'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                      icon: const Icon(Icons.delete_forever_rounded),
                     ),
                   ],
                 ),

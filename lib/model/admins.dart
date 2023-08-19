@@ -6,14 +6,16 @@ class Admin {
   final String? email;
   final bool? isOwner;
   bool? isBanned;
+  final String? password;
 
-  Admin(
+  Admin({
     this.id,
-    this.name,
-    this.email,
-    this.isOwner,
-    this.isBanned,
-  );
+    required this.name,
+    required this.email,
+    this.isOwner = false,
+    this.isBanned = false,
+    this.password,
+  });
 
   Admin copyWith({
     String? id,
@@ -21,13 +23,15 @@ class Admin {
     String? email,
     bool? isOwner,
     bool? isBanned,
+    String? password,
   }) {
     return Admin(
-      id ?? this.id,
-      name ?? this.name,
-      email ?? this.email,
-      isOwner ?? this.isOwner,
-      isBanned ?? this.isBanned,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      isOwner: isOwner ?? this.isOwner,
+      isBanned: isBanned ?? this.isBanned,
+      password: password ?? this.password,
     );
   }
 
@@ -36,18 +40,20 @@ class Admin {
       'id': id,
       'name': name,
       'email': email,
-      'isOwner': isOwner,
-      'isBanned': isBanned,
+      'isOwner': isOwner ?? false,
+      'isBanned': isBanned ?? false,
+      'password': password,
     };
   }
 
   factory Admin.fromMap(Map<String, dynamic> map) {
     return Admin(
-      map['id'],
-      map['name'],
-      map['email'],
-      map['isOwner'] ?? false,
-      map['isBanned'] ?? false,
+      id: map['id'],
+      name: map['name'],
+      email: map['email'],
+      isOwner: map['isOwner'] ?? false,
+      isBanned: map['isBanned'] ?? false,
+      password: map['password'],
     );
   }
 
@@ -57,7 +63,7 @@ class Admin {
 
   @override
   String toString() {
-    return 'Admin(id: $id, name: $name, email: $email, isOwner: $isOwner, isBanned: $isBanned)';
+    return 'Admin(id: $id, name: $name, email: $email, isOwner: $isOwner, isBanned: $isBanned, password: $password)';
   }
 
   @override
@@ -69,7 +75,8 @@ class Admin {
         other.name == name &&
         other.email == email &&
         other.isOwner == isOwner &&
-        other.isBanned == isBanned;
+        other.isBanned == isBanned &&
+        other.password == password;
   }
 
   @override
@@ -78,6 +85,7 @@ class Admin {
         name.hashCode ^
         email.hashCode ^
         isOwner.hashCode ^
-        isBanned.hashCode;
+        isBanned.hashCode ^
+        password.hashCode;
   }
 }

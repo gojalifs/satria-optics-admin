@@ -40,4 +40,32 @@ class AdminProvider extends BaseProvider {
       notifyListeners();
     }
   }
+
+  Future addAdmin() async {
+    try {
+      state = ConnectionState.active;
+
+      var id = await _helper.addAdmin(_admin!);
+      _admin = _admin?.copyWith(id: id);
+      _admins.add(_admin!);
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
+  Future deleteAdmin() async {
+    try {
+      state = ConnectionState.active;
+      await _helper.deleteAdmin(_admin!.id!);
+      _admins.remove(_admin);
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
 }
