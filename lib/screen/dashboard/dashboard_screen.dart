@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
+import 'package:satria_optik_admin/provider/profile_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String page = 'dashboard';
@@ -40,16 +41,16 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Good Night',
+                    'Hello',
                     style: TextStyle(
                       fontSize: 20,
                     ),
                   ),
-                  Consumer<AuthProvider>(
+                  Consumer<ProfileProvider>(
                     builder: (context, value, child) {
-                      return const Text(
-                        'Fajar',
-                        style: TextStyle(
+                      return Text(
+                        '${value.profile?.name}',
+                        style: const TextStyle(
                           fontSize: 24,
                         ),
                       );
