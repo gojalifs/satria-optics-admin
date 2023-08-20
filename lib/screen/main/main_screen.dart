@@ -12,6 +12,7 @@ import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
 import 'package:satria_optik_admin/screen/products/lens_screen.dart';
 import 'package:satria_optik_admin/screen/products/products_screen.dart';
+import 'package:satria_optik_admin/screen/setting/setting_screen.dart';
 
 class MainPage extends StatelessWidget {
   static String route = '/home';
@@ -45,6 +46,8 @@ class MainPage extends StatelessWidget {
                   return const LensPage();
                 case AdminScreen.page:
                   return const AdminScreen();
+                case SettingPage.page:
+                  return const SettingPage();
                 default:
                   return const Text('Something Error');
               }

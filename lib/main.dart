@@ -12,6 +12,7 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/lens_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
+import 'package:satria_optik_admin/provider/profile_provider.dart';
 import 'package:satria_optik_admin/provider/report_provider.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LensProvider()),
         ChangeNotifierProvider(create: (context) => ReportProvider()),
         ChangeNotifierProvider(create: (context) => AdminProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

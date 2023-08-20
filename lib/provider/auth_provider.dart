@@ -24,6 +24,20 @@ class AuthProvider extends BaseProvider {
     notifyListeners();
   }
 
+  String getUid() {
+    try {
+      if (user?.uid != null) {
+        return user!.uid;
+      } else {
+        throw "You're Loggede Out";
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future login(String email, String password) async {
     state = ConnectionState.active;
     try {

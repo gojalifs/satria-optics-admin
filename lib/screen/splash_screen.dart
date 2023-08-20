@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
+import 'package:satria_optik_admin/provider/profile_provider.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
@@ -20,10 +21,14 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
       return;
     }
     if (status) {
-      if (!mounted) {
-        return;
+      if (context.mounted) {
+        var uid = Provider.of<AuthProvider>(context, listen: false).getUid();
+        await Provider.of<ProfileProvider>(context, listen: false)
+            .getProfile(uid);
+        if (context.mounted) {
+          Navigator.of(context).pushReplacementNamed(MainPage.route);
+        }
       }
-      Navigator.of(context).pushReplacementNamed(MainPage.route);
     } else {
       Navigator.of(context).pushReplacementNamed(LoginPage.route);
     }
