@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/admins_provider.dart';
+import 'package:satria_optik_admin/provider/profile_provider.dart';
 
 class AdminScreen extends StatelessWidget {
   static const String page = '/admins';
@@ -18,11 +19,14 @@ class AdminScreen extends StatelessWidget {
           Provider.of<AdminProvider>(context, listen: false).admins.isEmpty
               ? true
               : false,
-      child: Consumer<AdminProvider>(
-        builder: (context, value, child) => ListView.builder(
+      child: Consumer2<AdminProvider, ProfileProvider>(
+        builder: (context, value, value2, child) => ListView.builder(
           itemCount: value.admins.length,
           itemBuilder: (BuildContext context, int index) {
             var admin = value.admins[index];
+            if (admin.email == value2.user?.email) {
+              return const SizedBox();
+            }
             return Card(
               color: admin.isBanned!
                   ? Colors.white60
