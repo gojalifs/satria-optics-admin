@@ -96,42 +96,12 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Users Data'),
           ),
           (user.profile?.isOwner != null && user.profile!.isOwner!)
-              ? ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  childrenPadding: const EdgeInsets.symmetric(horizontal: 36),
-                  expandedAlignment: Alignment.centerLeft,
-                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                  title: ListTile(
-                    leading: Image.asset('assets/icons/sales.png'),
-                    title: const Text('Sales Report'),
-                  ),
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context)
-                            .pushNamed(MonthlyReportPage.route);
-                      },
-                      child: const Text('Monthly Report'),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        home.page = 'report';
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Yearly Report'),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        home.page = 'report';
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Product Report'),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
+              ? ListTile(
+                  onTap: () {
+                    home.page = MonthlyReportPage.page;
+                  },
+                  leading: Image.asset('assets/icons/sales.png'),
+                  title: const Text('Sales Report'),
                 )
               : const SizedBox(),
           (user.profile?.isOwner != null && user.profile!.isOwner!)

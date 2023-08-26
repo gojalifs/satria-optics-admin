@@ -10,7 +10,7 @@ import 'package:satria_optik_admin/provider/report_provider.dart';
 import 'package:satria_optik_admin/screen/main/chart_card.dart';
 
 class MonthlyReportPage extends StatefulWidget {
-  static String route = '/monthly-report';
+  static const String page = '/monthly-report';
   const MonthlyReportPage({super.key});
 
   @override

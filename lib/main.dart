@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
           OrderDetailPage.route: (context) => const OrderDetailPage(),
           ProductDetailPage.route: (context) => const ProductDetailPage(),
           LensDetailPage.route: (context) => const LensDetailPage(),
-          MonthlyReportPage.route: (context) => const MonthlyReportPage(),
+          MonthlyReportPage.page: (context) => const MonthlyReportPage(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == AddFrameStockPage.route) {

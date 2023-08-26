@@ -13,6 +13,7 @@ import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
 import 'package:satria_optik_admin/screen/products/lens_screen.dart';
 import 'package:satria_optik_admin/screen/products/products_screen.dart';
+import 'package:satria_optik_admin/screen/sales_report/report_monthly_screen.dart';
 import 'package:satria_optik_admin/screen/setting/setting_screen.dart';
 
 class MainPage extends StatelessWidget {
@@ -49,6 +50,8 @@ class MainPage extends StatelessWidget {
                   return const CustomersPage();
                 case AdminScreen.page:
                   return const AdminScreen();
+                case MonthlyReportPage.page:
+                  return const MonthlyReportPage();
                 case SettingPage.page:
                   return const SettingPage();
                 default:
