@@ -143,9 +143,19 @@ class DashboardScreen extends StatelessWidget {
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(order.orders[index].cartProduct?[0].product.name ??
-                            ''),
-                        Text('#${orderData.id}'),
+                        Expanded(
+                          child: Text(
+                            order.orders[index].cartProduct?[0].product.name ??
+                                '',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '#${orderData.id}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                     subtitle: Row(
