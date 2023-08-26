@@ -3,6 +3,7 @@ import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:satria_optik_admin/custom/common_function.dart';
 import 'package:satria_optik_admin/model/address.dart';
 
 import 'package:satria_optik_admin/model/order.dart';
@@ -44,7 +45,10 @@ class OrderDetailPage extends StatelessWidget {
                         title: 'Customer Name',
                         data: order.address?.receiverName ?? '-'),
                     _RowData(title: 'Payment ID', data: '${order.paymentId}'),
-                    _RowData(title: 'Grand Total', data: '${order.total}'),
+                    _RowData(
+                      title: 'Grand Total',
+                      data: formatToRupiah('${order.subTotal}'),
+                    ),
                     _RowData(
                       title: 'Ordered At',
                       data: '${order.orderMadeTime?.toDate()}',
@@ -53,7 +57,10 @@ class OrderDetailPage extends StatelessWidget {
                       title: 'Paid At',
                       data: '${order.paymentMadeTime?.toDate()}',
                     ),
-                    _RowData(title: 'Grand Total', data: '${order.total}'),
+                    _RowData(
+                      title: 'Grand Total',
+                      data: formatToRupiah('${order.total}'),
+                    ),
                     _RowData(
                         title: 'Finished At',
                         data: '${order.orderFinishTime?.toDate()}'),
@@ -116,7 +123,10 @@ class OrderDetailPage extends StatelessWidget {
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 5,
                                           ),
-                                          child: Text('${product.totalPrice}'),
+                                          child: Text(
+                                            formatToRupiah(
+                                                '${product.totalPrice}'),
+                                          ),
                                         ),
                                         if (minusData!.leftEyeMinus!.isEmpty)
                                           const Text('Normal Lens (Plain)'),

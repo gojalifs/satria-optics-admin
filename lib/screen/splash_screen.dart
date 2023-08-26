@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
+import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/profile_provider.dart';
+import 'package:satria_optik_admin/provider/report_provider.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
@@ -25,6 +27,8 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
         var uid = Provider.of<AuthProvider>(context, listen: false).getUid();
         await Provider.of<ProfileProvider>(context, listen: false)
             .getProfile(uid);
+        await getReport();
+        await getNewOrder();
         if (context.mounted) {
           Navigator.of(context).pushReplacementNamed(MainPage.route);
         }
@@ -32,6 +36,19 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
     } else {
       Navigator.of(context).pushReplacementNamed(LoginPage.route);
     }
+  }
+
+  Future getReport() async {
+    var date = DateTime.now();
+    Provider.of<ReportProvider>(context, listen: false).setMonth =
+        DateTime(date.year, date.month, date.day);
+    await Provider.of<ReportProvider>(context, listen: false).getReport();
+  }
+
+  Future getNewOrder() async {
+    var value = Provider.of<OrderProvider>(context, listen: false);
+    value.hasNewOrder = true;
+    await value.getNewOrder('packing');
   }
 
   @override

@@ -6,7 +6,7 @@ class GlassFrame {
   final String? id;
   final List<String>? imageUrl;
   final String? name;
-  final String? price;
+  final int? price;
   final String? rating;
   final String? description;
   final String? type;
@@ -70,7 +70,7 @@ class GlassFrame {
     String? id,
     List<String>? imageUrl,
     String? name,
-    String? price,
+    int? price,
     String? rating,
     String? description,
     String? type,
