@@ -5,6 +5,7 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/lens_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
+import 'package:satria_optik_admin/provider/profile_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
 import 'package:satria_optik_admin/screen/customer/customers_screen.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
@@ -20,8 +21,8 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (context, home, child) => NavigationDrawer(
+    return Consumer2<HomeProvider, ProfileProvider>(
+      builder: (context, home, user, child) => NavigationDrawer(
         children: [
           DrawerHeader(
             child: Center(
@@ -94,57 +95,55 @@ class CustomDrawer extends StatelessWidget {
             leading: Image.asset('assets/icons/worker.png'),
             title: const Text('Users Data'),
           ),
-
-          /// TODO jika bukan owner, maka hilangkan
-          Consumer<HomeProvider>(
-            builder: (context, value, child) {
-              return ExpansionTile(
-                tilePadding: EdgeInsets.zero,
-                childrenPadding: const EdgeInsets.symmetric(horizontal: 36),
-                expandedAlignment: Alignment.centerLeft,
-                expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                title: ListTile(
+          (user.profile?.isOwner != null && user.profile!.isOwner!)
+              ? ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: const EdgeInsets.symmetric(horizontal: 36),
+                  expandedAlignment: Alignment.centerLeft,
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  title: ListTile(
                     leading: Image.asset('assets/icons/sales.png'),
-                    title: const Text('Sales Report')),
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed(MonthlyReportPage.route);
-                    },
-                    child: const Text('Monthly Report'),
+                    title: const Text('Sales Report'),
                   ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      value.page = 'report';
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Yearly Report'),
-                  ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      value.page = 'report';
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Product Report'),
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              );
-            },
-          ),
-
-          /// TODO Data Admin, muncul di owner
-          ListTile(
-            onTap: () {
-              home.page = AdminScreen.page;
-              Navigator.of(context).pop();
-            },
-            leading: Image.asset('assets/icons/worker.png'),
-            title: const Text('Data Admin'),
-          ),
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                            .pushNamed(MonthlyReportPage.route);
+                      },
+                      child: const Text('Monthly Report'),
+                    ),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        home.page = 'report';
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Yearly Report'),
+                    ),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        home.page = 'report';
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Product Report'),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                )
+              : const SizedBox(),
+          (user.profile?.isOwner != null && user.profile!.isOwner!)
+              ? ListTile(
+                  onTap: () {
+                    home.page = AdminScreen.page;
+                    Navigator.of(context).pop();
+                  },
+                  leading: Image.asset('assets/icons/worker.png'),
+                  title: const Text('Data Admin'),
+                )
+              : const SizedBox(),
           const Divider(),
           ListTile(
             onTap: () {
