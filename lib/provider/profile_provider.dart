@@ -17,6 +17,7 @@ class ProfileProvider extends BaseProvider {
   Future getProfile(String uid) async {
     try {
       _profile = await _helper.getAdminData(uid);
+      notifyListeners();
     } catch (e) {
       rethrow;
     }

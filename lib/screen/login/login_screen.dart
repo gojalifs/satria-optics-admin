@@ -87,6 +87,7 @@ class LoginPage extends StatelessWidget {
                                   formKey.currentState!.validate()) {
                                 await value.login(emailController.text.trim(),
                                     passController.text.trim());
+                                AuthProvider();
                                 if (context.mounted) {
                                   CherryToast.success(
                                     title: const Text(

@@ -73,7 +73,6 @@ class ProductProvider extends BaseProvider {
         _lenses = await _helper.getLenses();
       }
     } catch (e) {
-      print(e);
       throw 'Error getting data, try again later';
     } finally {
       _isRefresh = false;

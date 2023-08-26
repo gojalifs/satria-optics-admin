@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:satria_optik_admin/helper/auth_helper.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
@@ -5,6 +8,7 @@ import 'package:satria_optik_admin/provider/base_provider.dart';
 class AuthProvider extends BaseProvider {
   bool _hasNotification = false;
   final _authHelper = AuthHelper();
+  late StreamSubscription<User?> _authStateSubscription;
 
   bool get hasNotif => _hasNotification;
 
@@ -24,12 +28,20 @@ class AuthProvider extends BaseProvider {
     notifyListeners();
   }
 
+  AuthProvider() {
+    _authStateSubscription =
+        FirebaseAuth.instance.authStateChanges().listen((user) {
+      super.user = user;
+      notifyListeners();
+    });
+  }
+
   String getUid() {
     try {
       if (user?.uid != null) {
         return user!.uid;
       } else {
-        throw "You're Loggede Out";
+        throw "You're Logged Out";
       }
     } catch (e) {
       rethrow;
@@ -38,10 +50,38 @@ class AuthProvider extends BaseProvider {
     }
   }
 
-  Future login(String email, String password) async {
+  Future<String> updateEmail(String email, String password) async {
     state = ConnectionState.active;
     try {
-      await _authHelper.login(email, password);
+      var credential =
+          EmailAuthProvider.credential(email: user!.email!, password: password);
+      var authResult = await user?.reauthenticateWithCredential(credential);
+      user = authResult?.user;
+      await user?.updateEmail(email);
+      await FirebaseAuth.instance.currentUser?.reload();
+
+      FirebaseAuth.instance.authStateChanges().listen((user) {
+        super.user = user;
+      });
+      notifyListeners();
+      return user!.uid;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        throw 'Wrong Password';
+      }
+      throw 'You Entered Wrong Password';
+    } catch (e) {
+      throw 'error while updating your email';
+    } finally {
+      state = ConnectionState.done;
+    }
+  }
+
+  Future<String> login(String email, String password) async {
+    state = ConnectionState.active;
+    try {
+      var userCredential = await _authHelper.login(email, password);
+      return userCredential.user!.uid;
     } catch (e) {
       rethrow;
     } finally {
@@ -56,5 +96,11 @@ class AuthProvider extends BaseProvider {
     } catch (e) {
       throw 'Error logging you out :(';
     }
+  }
+
+  @override
+  void dispose() {
+    _authStateSubscription.cancel();
+    super.dispose();
   }
 }
