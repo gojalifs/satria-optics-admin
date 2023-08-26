@@ -7,7 +7,6 @@ import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
 import 'package:satria_optik_admin/screen/customer/customers_screen.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
-import 'package:satria_optik_admin/screen/main/custom_appbar.dart';
 import 'package:satria_optik_admin/screen/main/drawer.dart';
 import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
@@ -25,7 +24,9 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const SearchAppBar(),
+      appBar: AppBar(
+        title: const Text('Optik Satria Jaya'),
+      ),
       drawer: const CustomDrawer(),
       floatingActionButton: makeFAB(context),
       body: SafeArea(
