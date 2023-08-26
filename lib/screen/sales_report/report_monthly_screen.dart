@@ -75,7 +75,7 @@ class _MonthlyReportPageState extends State<MonthlyReportPage> {
                         lastDate: DateTime.now(),
                       );
                       if (month != null) {
-                        report.setMonth = month;
+                        report.month = month;
                         await report.getReport();
                       }
                     },

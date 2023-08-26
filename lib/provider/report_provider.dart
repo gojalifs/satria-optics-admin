@@ -21,7 +21,7 @@ class ReportProvider extends BaseProvider {
   List<ReportModel> get reports => _reports;
   ReportDataSource? get dataSource => _dataSource;
 
-  set setMonth(DateTime? month) {
+  set month(DateTime? month) {
     _month = month;
     notifyListeners();
   }

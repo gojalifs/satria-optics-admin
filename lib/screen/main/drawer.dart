@@ -99,6 +99,7 @@ class CustomDrawer extends StatelessWidget {
               ? ListTile(
                   onTap: () {
                     home.page = MonthlyReportPage.page;
+                    Navigator.of(context).pop();
                   },
                   leading: Image.asset('assets/icons/sales.png'),
                   title: const Text('Sales Report'),

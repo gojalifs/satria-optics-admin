@@ -40,8 +40,8 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
 
   Future getReport() async {
     var date = DateTime.now();
-    Provider.of<ReportProvider>(context, listen: false).setMonth =
-        DateTime(date.year, date.month, date.day);
+    Provider.of<ReportProvider>(context, listen: false).month =
+        DateTime(date.year, date.month, 0);
     await Provider.of<ReportProvider>(context, listen: false).getReport();
   }
 

@@ -60,6 +60,7 @@ class LoginPage extends StatelessWidget {
                     TextFormField(
                       autofillHints: const [AutofillHints.password],
                       controller: passController,
+                      obscureText: true,
                       decoration: const InputDecoration(
                         label: Text('Password'),
                       ),

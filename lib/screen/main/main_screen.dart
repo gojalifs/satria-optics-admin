@@ -29,37 +29,46 @@ class MainPage extends StatelessWidget {
       ),
       drawer: const CustomDrawer(),
       floatingActionButton: makeFAB(context),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Consumer<HomeProvider>(
-            builder: (context, value, child) {
-              switch (value.page) {
-                case DashboardScreen.page:
-                  return const DashboardScreen();
-                case 'new-order':
-                  return const NewOrderPage(orderStatus: 'packing');
-                case 'on-delivery':
-                  return const NewOrderPage(orderStatus: 'Shipping');
-                case AllOrderPage.pageName:
-                  return const AllOrderPage();
-                case 'products':
-                  return const ProductListPage();
-                case 'lens':
-                  return const LensPage();
-                case CustomersPage.page:
-                  return const CustomersPage();
-                case AdminScreen.page:
-                  return const AdminScreen();
-                case MonthlyReportPage.page:
-                  return const MonthlyReportPage();
-                case SettingPage.page:
-                  return const SettingPage();
-                default:
-                  return const Text('Something Error');
-              }
-              // Default screen
-            },
+      body: Consumer<HomeProvider>(
+        builder: (context, value, child) => WillPopScope(
+          onWillPop: () {
+            if (value.page != DashboardScreen.page) {
+              value.page = DashboardScreen.page;
+              return Future.value(false);
+            }
+            return Future.value(true);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Builder(
+              builder: (context) {
+                switch (value.page) {
+                  case DashboardScreen.page:
+                    return const DashboardScreen();
+                  case 'new-order':
+                    return const NewOrderPage(orderStatus: 'packing');
+                  case 'on-delivery':
+                    return const NewOrderPage(orderStatus: 'Shipping');
+                  case AllOrderPage.pageName:
+                    return const AllOrderPage();
+                  case 'products':
+                    return const ProductListPage();
+                  case 'lens':
+                    return const LensPage();
+                  case CustomersPage.page:
+                    return const CustomersPage();
+                  case AdminScreen.page:
+                    return const AdminScreen();
+                  case MonthlyReportPage.page:
+                    return const MonthlyReportPage();
+                  case SettingPage.page:
+                    return const SettingPage();
+                  default:
+                    return const Text('Something Error');
+                }
+                // Default screen
+              },
+            ),
           ),
         ),
       ),
