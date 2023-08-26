@@ -71,6 +71,8 @@ class SettingPage extends StatelessWidget {
                             label: Text('email'),
                           ),
                         ),
+
+                        /// TODO behaviour of change email need verification from auth
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
