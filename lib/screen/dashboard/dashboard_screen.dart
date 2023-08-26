@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satria_optik_admin/custom/common_function.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/profile_provider.dart';
+import 'package:satria_optik_admin/screen/main/chart_card.dart';
+import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String page = 'dashboard';
@@ -14,10 +17,32 @@ class DashboardScreen extends StatelessWidget {
     return ListView(
       children: [
         greetingCard(),
-        newOrdersCard(),
+        InkWell(
+          onTap: () {
+            Provider.of<HomeProvider>(context, listen: false).page =
+                NewOrderPage.page;
+          },
+          child: newOrdersCard(),
+        ),
         summaryCard(),
-        stockControllCard(),
+        reportCard(context),
       ],
+    );
+  }
+
+  reportCard(BuildContext context) {
+    return const Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'This Month Report',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(height: 20),
+          ChartSample(),
+        ],
+      ),
     );
   }
 
@@ -100,7 +125,7 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           children: [
             const Text(
-              'Today Order(s)',
+              'New Order(s)',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const Divider(),
@@ -113,15 +138,22 @@ class DashboardScreen extends StatelessWidget {
                   return const Divider();
                 },
                 itemBuilder: (context, index) {
+                  var orderData = order.orders[index];
                   return ListTile(
-                    title: Text(
-                        order.orders[index].cartProduct?[0].product.name ?? ''),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(order.orders[index].cartProduct?[0].product.name ??
+                            ''),
+                        Text('#${orderData.id}'),
+                      ],
+                    ),
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(order.orders[index].address?.receiverName ?? ''),
                         Text(
-                          '${order.orders[index].total}',
+                          formatToRupiah('${order.orders[index].total}'),
                           style: const TextStyle(
                             color: Color.fromRGBO(251, 18, 16, 1),
                           ),
@@ -150,34 +182,34 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Card stockControllCard() {
-    return const Card(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Text(
-              'Stock Controll',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-            ),
-            Divider(),
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Rayaban'),
-                  Text('5'),
-                ],
-              ),
-            ),
-            ListTile(
-              title: Text('Other product has more than 10 pcs'),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Card stockControllCard() {
+  //   return const Card(
+  //     child: Padding(
+  //       padding: EdgeInsets.all(10),
+  //       child: Column(
+  //         children: [
+  //           Text(
+  //             'Stock Controll',
+  //             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+  //           ),
+  //           Divider(),
+  //           ListTile(
+  //             title: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Text('Rayaban'),
+  //                 Text('5'),
+  //               ],
+  //             ),
+  //           ),
+  //           ListTile(
+  //             title: Text('Other product has more than 10 pcs'),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Card summaryCard() {
     return Card(
