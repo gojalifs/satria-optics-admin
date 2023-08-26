@@ -107,11 +107,9 @@ class SettingPage extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  print(isEmailUpdated);
                                   if (formKey.currentState!.validate()) {
                                     try {
                                       if (isEmailUpdated) {
-                                        print('update');
                                         primaryFocus?.unfocus();
                                         Navigator.of(context).pop();
 
