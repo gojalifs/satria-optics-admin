@@ -6,6 +6,7 @@ import 'package:satria_optik_admin/provider/lens_provider.dart';
 import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
+import 'package:satria_optik_admin/screen/customer/customers_screen.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
@@ -82,6 +83,16 @@ class CustomDrawer extends StatelessWidget {
             },
             leading: Image.asset('assets/icons/lens.png'),
             title: const Text('Lens'),
+          ),
+          ListTile(
+            onTap: () async {
+              home.page = CustomersPage.page;
+              Navigator.of(context).pop();
+              await Provider.of<LensProvider>(context, listen: false)
+                  .getLenses();
+            },
+            leading: Image.asset('assets/icons/worker.png'),
+            title: const Text('Users Data'),
           ),
 
           /// TODO jika bukan owner, maka hilangkan
