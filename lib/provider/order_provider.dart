@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:satria_optik_admin/helper/order_helper.dart';
 import 'package:satria_optik_admin/model/order.dart';
+import 'package:satria_optik_admin/model/order_summary.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
 
 class OrderProvider extends BaseProvider {
@@ -10,6 +11,7 @@ class OrderProvider extends BaseProvider {
   List<OrderModel> _shippings = [];
   List<OrderModel> _rangedOrder = [];
   OrderModel _order = OrderModel();
+  OrderSummary? _summary;
   bool _isfirst = true;
   DateTimeRange? _timeRange;
   String? _range;
@@ -24,6 +26,7 @@ class OrderProvider extends BaseProvider {
   OrderModel get order => _order;
   bool get isFirst => _isfirst;
   bool get hasNewOrder => _hasNewOrder;
+  OrderSummary? get summary => _summary;
   DateTimeRange? get timeRange => _timeRange;
   String? get range => _range;
 
@@ -107,6 +110,19 @@ class OrderProvider extends BaseProvider {
       // }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future getTodaySummary() async {
+    state = ConnectionState.active;
+    try {
+      _summary = await _orderHelper.getTodaySummary();
+      print(_summary?.toMap());
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
     }
   }
 }

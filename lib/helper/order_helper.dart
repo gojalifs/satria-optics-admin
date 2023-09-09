@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:satria_optik_admin/helper/firebase_helper.dart';
 import 'package:satria_optik_admin/model/order.dart';
+import 'package:satria_optik_admin/model/order_summary.dart';
 
 class OrderHelper extends FirestoreHelper {
   /// TODO using FCM
@@ -76,6 +77,36 @@ class OrderHelper extends FirestoreHelper {
       }
     } catch (e) {
       throw 'Something error when updating the data';
+    }
+  }
+
+  Future<OrderSummary> getTodaySummary() async {
+    try {
+      var time = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      );
+      print(time);
+      var ref = db
+          .collectionGroup('transactions')
+          .where(
+            'paymentMadeTime',
+            isGreaterThanOrEqualTo: time,
+          )
+          .where('paymentStatus', isEqualTo: 'Paid')
+          .orderBy('paymentMadeTime', descending: true);
+      var data = await ref.get();
+      var count = data.size;
+      var total = 0;
+      for (var element in data.docs) {
+        var dataMap = element.data();
+        int subTotal = dataMap['total'];
+        total += subTotal;
+      }
+      return OrderSummary(total: total, count: count);
+    } catch (e) {
+      throw 'Error Getting Data';
     }
   }
 }

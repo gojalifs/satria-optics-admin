@@ -18,11 +18,12 @@ class DashboardScreen extends StatelessWidget {
     return ListView(
       children: [
         InkWell(
-            onTap: () {
-              Provider.of<HomeProvider>(context, listen: false).page =
-                  SettingPage.page;
-            },
-            child: greetingCard()),
+          onTap: () {
+            Provider.of<HomeProvider>(context, listen: false).page =
+                SettingPage.page;
+          },
+          child: greetingCard(),
+        ),
         InkWell(
           onTap: () {
             Provider.of<HomeProvider>(context, listen: false).page =
@@ -30,7 +31,12 @@ class DashboardScreen extends StatelessWidget {
           },
           child: newOrdersCard(),
         ),
-        summaryCard(),
+        InkWell(
+            onTap: () async {
+              await Provider.of<OrderProvider>(context, listen: false)
+                  .getTodaySummary();
+            },
+            child: summaryCard()),
         reportCard(context),
       ],
     );
@@ -198,43 +204,15 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  // Card stockControllCard() {
-  //   return const Card(
-  //     child: Padding(
-  //       padding: EdgeInsets.all(10),
-  //       child: Column(
-  //         children: [
-  //           Text(
-  //             'Stock Controll',
-  //             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-  //           ),
-  //           Divider(),
-  //           ListTile(
-  //             title: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Rayaban'),
-  //                 Text('5'),
-  //               ],
-  //             ),
-  //           ),
-  //           ListTile(
-  //             title: Text('Other product has more than 10 pcs'),
-  //           )
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Card summaryCard() {
-    return Card(
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: const Column(
+/* 
+  Card stockControllCard() {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
           children: [
             Text(
-              'Today Summary',
+              'Stock Controll',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             Divider(),
@@ -242,21 +220,53 @@ class DashboardScreen extends StatelessWidget {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Amount Sold'),
+                  Text('Rayaban'),
                   Text('5'),
                 ],
               ),
             ),
             ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Turnover'),
-                  Text('Rp2.300.000'),
-                ],
-              ),
-            ),
+              title: Text('Other product has more than 10 pcs'),
+            )
           ],
+        ),
+      ),
+    );
+  }
+ */
+
+  Card summaryCard() {
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: Consumer<OrderProvider>(
+          builder: (context, value, child) => Column(
+            children: [
+              const Text(
+                'Today Summary',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              ),
+              const Divider(),
+              ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Amount Sold'),
+                    Text('${value.summary?.count}'),
+                  ],
+                ),
+              ),
+              ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Turnover'),
+                    Text(formatToRupiah('${value.summary?.total}')),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
