@@ -141,6 +141,7 @@ class SettingPage extends StatelessWidget {
                                               TextButton(
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
+                                                  passwordController.clear();
                                                 },
                                                 child: const Text('Cancel'),
                                               ),

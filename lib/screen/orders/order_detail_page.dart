@@ -83,11 +83,10 @@ class OrderDetailPage extends StatelessWidget {
                             return Column(
                               children: [
                                 Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SizedBox(
-                                      width: 150,
-                                      height: 150,
+                                    Expanded(
+                                      flex: 2,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image.network(
@@ -97,40 +96,43 @@ class OrderDetailPage extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 5,
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 5,
+                                            ),
+                                            child: Text(frame.name!),
                                           ),
-                                          child: Text(frame.name!),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 5,
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 5,
+                                            ),
+                                            child: Text(product.color),
                                           ),
-                                          child: Text(product.color),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 5,
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 5,
+                                            ),
+                                            child: Text(lens.name!),
                                           ),
-                                          child: Text(lens.name!),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 5,
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 5,
+                                            ),
+                                            child: Text(
+                                              formatToRupiah(
+                                                  '${product.totalPrice}'),
+                                            ),
                                           ),
-                                          child: Text(
-                                            formatToRupiah(
-                                                '${product.totalPrice}'),
-                                          ),
-                                        ),
-                                        if (minusData!.leftEyeMinus!.isEmpty)
-                                          const Text('Normal Lens (Plain)'),
-                                      ],
+                                          if (minusData!.leftEyeMinus!.isEmpty)
+                                            const Text('Normal Lens (Plain)'),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -169,26 +171,34 @@ class OrderDetailPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      SizedBox(
-                                        width: 100,
-                                        height: 100,
-                                        child: Image.network(
-                                          minusData.recipePath!,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons
-                                                    .error_outline_rounded),
-                                                Text('Failed getting image'),
-                                              ],
-                                            );
-                                          },
+                                      Expanded(
+                                        flex: 2,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                            minusData.recipePath!,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons
+                                                      .error_outline_rounded),
+                                                  Text('Failed getting image'),
+                                                ],
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
-                                      const Text('Recipe Image, Tap To Zoom'),
+                                      const SizedBox(width: 20),
+                                      const Expanded(
+                                        flex: 3,
+                                        child:
+                                            Text('Recipe Image, Tap To Zoom'),
+                                      ),
                                     ],
                                   ),
                               ],
@@ -245,42 +255,42 @@ class OrderDetailPage extends StatelessWidget {
                     if (order.orderStatus == 'packing')
                       Column(
                         children: [
-                          SizedBox(
-                            width: double.maxFinite,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                var printerGroup = 'printer';
-                                // TODO implement print, if possible
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text('Finding for a printer'),
-                                          const CircularProgressIndicator
-                                              .adaptive(),
-                                          RadioListTile.adaptive(
-                                            value: 'HP',
-                                            groupValue: printerGroup,
-                                            onChanged: (value) {},
-                                          ),
-                                          RadioListTile.adaptive(
-                                            value: 'EPSON',
-                                            groupValue: printerGroup,
-                                            onChanged: (value) {},
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.print_rounded),
-                              label: const Text('Print Address'),
-                            ),
-                          ),
+                          // TODO implement print, if possible
+                          // SizedBox(
+                          //   width: double.maxFinite,
+                          //   child: ElevatedButton.icon(
+                          //     onPressed: () {
+                          //       var printerGroup = 'printer';
+                          //       showDialog(
+                          //         context: context,
+                          //         builder: (context) {
+                          //           return AlertDialog(
+                          //             content: Column(
+                          //               mainAxisSize: MainAxisSize.min,
+                          //               children: [
+                          //                 const Text('Finding for a printer'),
+                          //                 const CircularProgressIndicator
+                          //                     .adaptive(),
+                          //                 RadioListTile.adaptive(
+                          //                   value: 'HP',
+                          //                   groupValue: printerGroup,
+                          //                   onChanged: (value) {},
+                          //                 ),
+                          //                 RadioListTile.adaptive(
+                          //                   value: 'EPSON',
+                          //                   groupValue: printerGroup,
+                          //                   onChanged: (value) {},
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           );
+                          //         },
+                          //       );
+                          //     },
+                          //     icon: const Icon(Icons.print_rounded),
+                          //     label: const Text('Print Address'),
+                          //   ),
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -301,6 +311,7 @@ class OrderDetailPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              const SizedBox(width: 20),
                               Expanded(
                                 child: Consumer<OrderProvider>(
                                   builder: (context, value, child) =>

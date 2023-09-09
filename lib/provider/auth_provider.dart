@@ -53,12 +53,7 @@ class AuthProvider extends BaseProvider {
   Future<String> updateEmail(String email, String password) async {
     state = ConnectionState.active;
     try {
-      var credential =
-          EmailAuthProvider.credential(email: user!.email!, password: password);
-      var authResult = await user?.reauthenticateWithCredential(credential);
-      user = authResult?.user;
-      await user?.updateEmail(email);
-      await FirebaseAuth.instance.currentUser?.reload();
+      await _authHelper.changeEmail(user!, user!.email!, email, password);
 
       FirebaseAuth.instance.authStateChanges().listen((user) {
         super.user = user;

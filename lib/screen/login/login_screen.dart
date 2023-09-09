@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
+import 'package:satria_optik_admin/provider/order_provider.dart';
+import 'package:satria_optik_admin/provider/profile_provider.dart';
+import 'package:satria_optik_admin/provider/report_provider.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 
@@ -16,6 +19,18 @@ class LoginPage extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     TextEditingController emailController = TextEditingController();
     TextEditingController passController = TextEditingController();
+    Future getReport() async {
+      var date = DateTime.now();
+      Provider.of<ReportProvider>(context, listen: false).month =
+          DateTime(date.year, date.month, 0);
+      await Provider.of<ReportProvider>(context, listen: false).getReport();
+    }
+
+    Future getNewOrder() async {
+      var value = Provider.of<OrderProvider>(context, listen: false);
+      value.hasNewOrder = true;
+      await value.getNewOrder('packing');
+    }
 
     return GestureDetector(
       onTap: () {
@@ -83,24 +98,34 @@ class LoginPage extends StatelessWidget {
                         }
                         return ElevatedButton(
                           onPressed: () async {
+                            primaryFocus?.unfocus();
                             try {
                               if (formKey.currentState != null &&
                                   formKey.currentState!.validate()) {
-                                await value.login(emailController.text.trim(),
+                                var uid = await value.login(
+                                    emailController.text.trim(),
                                     passController.text.trim());
                                 AuthProvider();
                                 if (context.mounted) {
-                                  CherryToast.success(
-                                    title: const Text(
-                                      'Login Success, redirecting You . . .',
-                                    ),
-                                    toastPosition: Position.bottom,
-                                  ).show(context);
-                                  Provider.of<HomeProvider>(context,
+                                  await Provider.of<ProfileProvider>(context,
                                           listen: false)
-                                      .page = DashboardScreen.page;
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      MainPage.route, (route) => false);
+                                      .getProfile(uid);
+                                  getNewOrder();
+                                  getReport();
+                                  if (context.mounted) {
+                                    CherryToast.success(
+                                      title: const Text(
+                                        'Login Success, redirecting You . . .',
+                                      ),
+                                      toastPosition: Position.bottom,
+                                    ).show(context);
+                                    Provider.of<HomeProvider>(context,
+                                            listen: false)
+                                        .page = DashboardScreen.page;
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            MainPage.route, (route) => false);
+                                  }
                                 }
                               }
                             } catch (e) {

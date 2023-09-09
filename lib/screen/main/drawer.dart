@@ -14,7 +14,7 @@ import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/products/lens_screen.dart';
 import 'package:satria_optik_admin/screen/products/products_screen.dart';
 import 'package:satria_optik_admin/screen/sales_report/report_monthly_screen.dart';
-import 'package:satria_optik_admin/screen/setting/setting_screen.dart';
+import 'package:satria_optik_admin/screen/profile/profile_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});

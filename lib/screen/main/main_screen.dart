@@ -13,7 +13,7 @@ import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
 import 'package:satria_optik_admin/screen/products/lens_screen.dart';
 import 'package:satria_optik_admin/screen/products/products_screen.dart';
 import 'package:satria_optik_admin/screen/sales_report/report_monthly_screen.dart';
-import 'package:satria_optik_admin/screen/setting/setting_screen.dart';
+import 'package:satria_optik_admin/screen/profile/profile_screen.dart';
 
 class MainPage extends StatelessWidget {
   static String route = '/home';
@@ -22,6 +22,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _key = GlobalKey<ScaffoldState>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -32,6 +33,12 @@ class MainPage extends StatelessWidget {
       body: Consumer<HomeProvider>(
         builder: (context, value, child) => WillPopScope(
           onWillPop: () {
+            bool isDrawerOpen = _key.currentState?.isDrawerOpen ?? false;
+            print(isDrawerOpen);
+            if (isDrawerOpen) {
+              Navigator.of(context).pop();
+              return Future.value(false);
+            }
             if (value.page != DashboardScreen.page) {
               value.page = DashboardScreen.page;
               return Future.value(false);

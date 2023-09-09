@@ -9,7 +9,8 @@ class ProfileHelper extends FirestoreHelper {
       Map<String, dynamic> adminMap = data.data()!;
       adminMap['id'] = data.id;
       return Admin.fromMap(adminMap);
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       throw 'Error getting data';
     }
   }

@@ -19,9 +19,6 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
   checkLoginStatus() async {
     var status = await Provider.of<AuthProvider>(context, listen: false)
         .checkLoginStatus();
-    if (!mounted) {
-      return;
-    }
     if (status) {
       if (context.mounted) {
         var uid = Provider.of<AuthProvider>(context, listen: false).getUid();
@@ -34,6 +31,9 @@ class _CustomSplashPageState extends State<CustomSplashPage> {
         }
       }
     } else {
+      if (!mounted) {
+        return;
+      }
       Navigator.of(context).pushReplacementNamed(LoginPage.route);
     }
   }

@@ -7,6 +7,7 @@ import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/profile_provider.dart';
 import 'package:satria_optik_admin/screen/main/chart_card.dart';
 import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
+import 'package:satria_optik_admin/screen/profile/profile_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String page = 'dashboard';
@@ -16,7 +17,12 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        greetingCard(),
+        InkWell(
+            onTap: () {
+              Provider.of<HomeProvider>(context, listen: false).page =
+                  SettingPage.page;
+            },
+            child: greetingCard()),
         InkWell(
           onTap: () {
             Provider.of<HomeProvider>(context, listen: false).page =
