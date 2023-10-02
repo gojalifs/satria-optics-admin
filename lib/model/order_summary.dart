@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class OrderSummary {
-  final int total;
+  final String total;
   final int count;
 
   OrderSummary({
@@ -10,7 +10,7 @@ class OrderSummary {
   });
 
   OrderSummary copyWith({
-    int? total,
+    String? total,
     int? count,
   }) {
     return OrderSummary(
@@ -28,7 +28,7 @@ class OrderSummary {
 
   factory OrderSummary.fromMap(Map<String, dynamic> map) {
     return OrderSummary(
-      total: map['total']?.toInt() ?? 0,
+      total: map['total'] ?? '',
       count: map['count']?.toInt() ?? 0,
     );
   }

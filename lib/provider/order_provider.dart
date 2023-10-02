@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:satria_optik_admin/custom/common_function.dart';
 import 'package:satria_optik_admin/helper/order_helper.dart';
 import 'package:satria_optik_admin/model/order.dart';
 import 'package:satria_optik_admin/model/order_summary.dart';
@@ -116,8 +117,8 @@ class OrderProvider extends BaseProvider {
   Future getTodaySummary() async {
     state = ConnectionState.active;
     try {
-      _summary = await _orderHelper.getTodaySummary();
-      print(_summary?.toMap());
+      var result = await _orderHelper.getTodaySummary();
+      _summary = result.copyWith(total: formatToRupiah(result.total));
     } catch (e) {
       rethrow;
     } finally {

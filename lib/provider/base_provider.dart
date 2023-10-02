@@ -12,7 +12,6 @@ class BaseProvider extends ChangeNotifier {
 
   set state(ConnectionState state) {
     _state = state;
-    notifyListeners();
   }
 
   set setNotification(String name) {

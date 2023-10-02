@@ -66,12 +66,16 @@ class OrderHelper extends FirestoreHelper {
           db.collection('users').doc(user).collection('transactions').doc(id);
       if (isProceed) {
         await ref.set(
-          {'receiptNumber': data, 'orderStatus': 'Shipping'},
+          {
+            'receiptNumber': data,
+            'orderStatus': 'Shipping',
+            'deliveryStatus': 'On Courier',
+          },
           SetOptions(merge: true),
         );
       } else {
         await ref.set(
-          {'cancelReason': data, 'orderStatus': 'Cancelled by Seller'},
+          {'cancelReason': data, 'orderStatus': 'cancelled'},
           SetOptions(merge: true),
         );
       }
@@ -104,7 +108,7 @@ class OrderHelper extends FirestoreHelper {
         int subTotal = dataMap['total'];
         total += subTotal;
       }
-      return OrderSummary(total: total, count: count);
+      return OrderSummary(total: '$total', count: count);
     } catch (e) {
       throw 'Error Getting Data';
     }

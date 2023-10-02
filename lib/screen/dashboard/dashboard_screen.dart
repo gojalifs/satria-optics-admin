@@ -32,11 +32,12 @@ class DashboardScreen extends StatelessWidget {
           child: newOrdersCard(),
         ),
         InkWell(
-            onTap: () async {
-              await Provider.of<OrderProvider>(context, listen: false)
-                  .getTodaySummary();
-            },
-            child: summaryCard()),
+          onTap: () async {
+            await Provider.of<OrderProvider>(context, listen: false)
+                .getTodaySummary();
+          },
+          child: const SummaryCard(),
+        ),
         reportCard(context),
       ],
     );
@@ -234,8 +235,26 @@ class DashboardScreen extends StatelessWidget {
     );
   }
  */
+}
 
-  Card summaryCard() {
+class SummaryCard extends StatefulWidget {
+  const SummaryCard({
+    super.key,
+  });
+
+  @override
+  State<SummaryCard> createState() => _SummaryCardState();
+}
+
+class _SummaryCardState extends State<SummaryCard> {
+  @override
+  void initState() {
+    Provider.of<OrderProvider>(context, listen: false).getTodaySummary();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -261,7 +280,7 @@ class DashboardScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Turnover'),
-                    Text(formatToRupiah('${value.summary?.total}')),
+                    Text(value.summary?.total ?? ''),
                   ],
                 ),
               ),
