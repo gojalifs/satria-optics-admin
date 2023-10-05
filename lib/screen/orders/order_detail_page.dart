@@ -51,11 +51,11 @@ class OrderDetailPage extends StatelessWidget {
                     ),
                     _RowData(
                       title: 'Ordered At',
-                      data: '${order.orderMadeTime?.toDate()}',
+                      data: timeFormat(order.orderMadeTime),
                     ),
                     _RowData(
                       title: 'Paid At',
-                      data: '${order.paymentMadeTime?.toDate()}',
+                      data: timeFormat(order.paymentMadeTime),
                     ),
                     _RowData(
                       title: 'Grand Total',
@@ -63,7 +63,7 @@ class OrderDetailPage extends StatelessWidget {
                     ),
                     _RowData(
                         title: 'Finished At',
-                        data: '${order.orderFinishTime?.toDate()}'),
+                        data: timeFormat(order.orderFinishTime)),
                     const Divider(),
                     Card(
                       color: Theme.of(context).colorScheme.primaryContainer,
