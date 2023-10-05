@@ -8,6 +8,7 @@ import 'package:satria_optik_admin/firebase_options.dart';
 import 'package:satria_optik_admin/provider/admins_provider.dart';
 import 'package:satria_optik_admin/provider/auth_provider.dart';
 import 'package:satria_optik_admin/provider/base_provider.dart';
+import 'package:satria_optik_admin/provider/chat_provider.dart';
 import 'package:satria_optik_admin/provider/customer_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/provider/lens_provider.dart';
@@ -15,6 +16,7 @@ import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/provider/profile_provider.dart';
 import 'package:satria_optik_admin/provider/report_provider.dart';
+import 'package:satria_optik_admin/screen/chat/chat_data_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
 import 'package:satria_optik_admin/screen/main/main_screen.dart';
 import 'package:satria_optik_admin/screen/orders/order_detail_page.dart';
@@ -49,6 +51,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AdminProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => CustomerProvider()),
+        ChangeNotifierProvider(create: (context) => ChatProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -69,6 +72,11 @@ class MyApp extends StatelessWidget {
             var args = settings.arguments as Map<String, dynamic>;
             return MaterialPageRoute(
               builder: (context) => AddFrameStockPage(colorData: args),
+            );
+          } else if (settings.name == ChatDataPage.page) {
+            var args = settings.arguments as String;
+            return MaterialPageRoute(
+              builder: (context) => ChatDataPage(userId: args),
             );
           }
           assert(false, 'Need to implement ${settings.name} on routes');

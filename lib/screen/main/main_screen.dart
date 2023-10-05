@@ -5,6 +5,7 @@ import 'package:satria_optik_admin/model/admins.dart';
 import 'package:satria_optik_admin/provider/admins_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
+import 'package:satria_optik_admin/screen/chat/chat_list_screen.dart';
 import 'package:satria_optik_admin/screen/customer/customers_screen.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/main/drawer.dart';
@@ -64,6 +65,8 @@ class MainPage extends StatelessWidget {
                     return const LensPage();
                   case CustomersPage.page:
                     return const CustomersPage();
+                  case ChatPage.page:
+                    return const ChatPage();
                   case AdminScreen.page:
                     return const AdminScreen();
                   case MonthlyReportPage.page:

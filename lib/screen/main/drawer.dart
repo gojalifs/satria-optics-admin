@@ -7,6 +7,7 @@ import 'package:satria_optik_admin/provider/order_provider.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/provider/profile_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
+import 'package:satria_optik_admin/screen/chat/chat_list_screen.dart';
 import 'package:satria_optik_admin/screen/customer/customers_screen.dart';
 import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/login/login_screen.dart';
@@ -94,6 +95,14 @@ class CustomDrawer extends StatelessWidget {
             },
             leading: Image.asset('assets/icons/worker.png'),
             title: const Text('Users Data'),
+          ),
+          ListTile(
+            onTap: () {
+              home.page = ChatPage.page;
+              Navigator.of(context).pop();
+            },
+            leading: Image.asset('assets/icons/demand.png'),
+            title: const Text('Chats'),
           ),
           (user.profile?.isOwner != null && user.profile!.isOwner!)
               ? ListTile(
