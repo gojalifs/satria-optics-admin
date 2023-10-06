@@ -85,6 +85,9 @@ class _ChatDataPageState extends State<ChatDataPage> {
                       controller: controller,
                       minLines: 1,
                       maxLines: 3,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                       decoration: const InputDecoration(
                           hintText: 'type message here...',
                           fillColor: Colors.black),
@@ -94,7 +97,6 @@ class _ChatDataPageState extends State<ChatDataPage> {
                     onPressed: controller.text.isEmpty
                         ? null
                         : () {
-                            print('object');
                             Provider.of<ChatProvider>(context, listen: false)
                                 .addNewChat(
                               ChatMetaData(

@@ -1,4 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
+class ChatHeader {
+  final String? id;
+  final String? name;
+  final String? lastMessage;
+  final List<ChatMetaData>? chats;
+
+  ChatHeader({
+    this.id,
+    this.name,
+    this.lastMessage,
+    this.chats,
+  });
+
+  ChatHeader copyWith({
+    ValueGetter<String?>? id,
+    ValueGetter<String?>? name,
+    ValueGetter<String?>? lastMessage,
+    ValueGetter<List<ChatMetaData>?>? chat,
+  }) {
+    return ChatHeader(
+      id: id != null ? id() : this.id,
+      name: name != null ? name() : this.name,
+      lastMessage: lastMessage != null ? lastMessage() : this.lastMessage,
+      chats: chat != null ? chat() : this.chats,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ChatHeader(id: $id, name: $name, lastMessage: $lastMessage, chat: $chats)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ChatHeader &&
+        other.id == id &&
+        other.name == name &&
+        other.lastMessage == lastMessage &&
+        listEquals(other.chats, chats);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^ name.hashCode ^ lastMessage.hashCode ^ chats.hashCode;
+  }
+}
 
 class ChatMetaData {
   final String? id;
