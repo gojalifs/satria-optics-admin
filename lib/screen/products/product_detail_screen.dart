@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:satria_optik_admin/model/glass_frame.dart';
@@ -9,10 +10,12 @@ import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/products/add_frame_stock_screen.dart';
 
 class ProductDetailPage extends StatelessWidget {
+  final bool isAdd;
   static String route = '/product-detail';
 
   const ProductDetailPage({
     Key? key,
+    required this.isAdd,
   }) : super(key: key);
 
   @override
@@ -21,10 +24,47 @@ class ProductDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Consumer<ProductProvider>(
-          builder: (context, value, child) => Text(value.frame.name!),
-        ),
+        title: isAdd
+            ? const Text('Add New Data')
+            : Consumer<ProductProvider>(
+                builder: (context, value, child) => Text('${value.frame.name}'),
+              ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: isAdd
+          ? Consumer<ProductProvider>(
+              builder: (context, value, child) => FloatingActionButton(
+                onPressed: Provider.of<ProductProvider>(context).frame !=
+                            GlassFrame() ||
+                        value.state != ConnectionState.active
+                    ? () {
+                        Provider.of<ProductProvider>(context, listen: false)
+                            .addProduct();
+                      }
+                    : null,
+                backgroundColor: value.frame != GlassFrame()
+                    ? Theme.of(context).colorScheme.primaryContainer
+                    : Colors.grey.shade400,
+                child: value.state != ConnectionState.active
+                    ? const Text('Save')
+                    : const CircularProgressIndicator(),
+              ),
+            )
+          : Consumer<ProductProvider>(
+              builder: (context, value, child) => FloatingActionButton(
+                onPressed: value.state == ConnectionState.active
+                    ? null
+                    : () async {
+                        await value.deleteProduct();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                child: value.state == ConnectionState.active
+                    ? const CircularProgressIndicator.adaptive()
+                    : const Icon(Icons.delete_forever),
+              ),
+            ),
       body: ListView(
         children: [
           const Center(
@@ -41,28 +81,46 @@ class ProductDetailPage extends StatelessWidget {
                 shrinkWrap: true,
                 children: [
                   ProductDetailTile(
-                      title: 'Frame Name', detail: '${frame.name}'),
-                  ProductDetailTile(
-                      title: 'Frame Description',
-                      detail: '${frame.description}'),
-                  ProductDetailTile(
-                      title: 'Frame Gender', detail: '${frame.gender}'),
-                  ProductDetailTile(
-                      title: 'Frame Material', detail: '${frame.material}'),
-                  ProductDetailTile(
-                      title: 'Frame Price', detail: '${frame.price}'),
-                  ProductDetailTile(
-                      title: 'Frame Rating', detail: '${frame.rating}'),
-                  ProductDetailTile(
-                      title: 'Frame Shape', detail: '${frame.shape}'),
-                  ProductDetailTile(
-                    title: 'Frame Stock',
-                    detail: 'Tap To See The Details',
-                    isStock: true,
-                    frameData: frame,
+                    title: 'Frame Name',
+                    detail: frame.name ?? '',
+                    isAdd: isAdd,
                   ),
                   ProductDetailTile(
-                      title: 'Frame Type', detail: '${frame.type}'),
+                      title: 'Frame Description',
+                      detail: frame.description ?? '',
+                      isAdd: isAdd),
+                  ProductDetailTile(
+                      title: 'Frame Gender',
+                      detail: frame.gender ?? '',
+                      isAdd: isAdd),
+                  ProductDetailTile(
+                      title: 'Frame Material',
+                      detail: frame.material ?? '',
+                      isAdd: isAdd),
+                  ProductDetailTile(
+                      title: 'Frame Price',
+                      detail: (frame.price ?? 0).toString(),
+                      isAdd: isAdd),
+                  ProductDetailTile(
+                      title: 'Frame Rating',
+                      detail: frame.rating ?? '',
+                      isAdd: isAdd),
+                  ProductDetailTile(
+                      title: 'Frame Shape',
+                      detail: frame.shape ?? '',
+                      isAdd: isAdd),
+                  isAdd
+                      ? const SizedBox()
+                      : ProductDetailTile(
+                          title: 'Frame Stock',
+                          detail: 'Tap To See The Details',
+                          isStock: true,
+                          frameData: frame,
+                          isAdd: isAdd),
+                  ProductDetailTile(
+                      title: 'Frame Type',
+                      detail: frame.type ?? '',
+                      isAdd: isAdd),
                 ],
               );
             },
@@ -75,20 +133,30 @@ class ProductDetailPage extends StatelessWidget {
             itemBuilder: (context, index) => productTiles[index],
           ),
           const Divider(),
-          const Text('Frame Images'),
-          Consumer<ProductProvider>(
-            builder: (context, value, child) => ImageGrid(
-              frame: value.frame,
-              isColor: false,
-            ),
-          ),
-          const Text('Frame Images By Color'),
-          Consumer<ProductProvider>(
-            builder: (context, value, child) => ImageGrid(
-              frame: value.frame,
-              isColor: true,
-            ),
-          ),
+          isAdd
+              ? const Text(
+                  '''For other detail, please change in '''
+                  '''change detail page''',
+                  style: TextStyle(fontSize: 18, color: Colors.black87),
+                )
+              : const Text('Frame Images'),
+          isAdd
+              ? const SizedBox()
+              : Consumer<ProductProvider>(
+                  builder: (context, value, child) => ImageGrid(
+                    frame: value.frame,
+                    isColor: false,
+                  ),
+                ),
+          isAdd ? const SizedBox() : const Text('Frame Images By Color'),
+          isAdd
+              ? const SizedBox()
+              : Consumer<ProductProvider>(
+                  builder: (context, value, child) => ImageGrid(
+                    frame: value.frame,
+                    isColor: true,
+                  ),
+                ),
         ],
       ),
     );
@@ -119,14 +187,14 @@ class ImageGrid extends StatelessWidget {
     }
 
     return GridView.builder(
-      itemCount: isColor ? images?.length : images!.length + 1,
+      itemCount: isColor ? images?.length : (images?.length ?? 0) + 1,
       padding: const EdgeInsets.symmetric(vertical: 10),
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        if (index == images!.length && !isColor) {
+        if (index == images?.length && !isColor) {
           return Container(
             width: double.maxFinite,
             margin: const EdgeInsets.all(25),
@@ -187,7 +255,7 @@ class ImageGrid extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Image.network(
-                images[index],
+                images?[index] ?? '',
                 fit: BoxFit.cover,
                 loadingBuilder: (BuildContext context, Widget child,
                     ImageChunkEvent? loadingProgress) {
@@ -216,42 +284,44 @@ class ImageGrid extends StatelessWidget {
                     ),
                   ),
                   onPressed: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cancel'),
-                          ),
-                          Consumer<ProductProvider>(
-                            builder: (context, value, child) => TextButton(
-                              onPressed: () async {
-                                await value.deleteMainImage(images![index]);
-                                frame.imageUrl?.remove(images[index]);
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
+                    if (images?[index] != null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
                               },
-                              child: value.state == ConnectionState.active
-                                  ? const SizedBox(
-                                      width: 50,
-                                      child: LinearProgressIndicator(),
-                                    )
-                                  : const Text('Yes, delete'),
+                              child: const Text('Cancel'),
                             ),
+                            Consumer<ProductProvider>(
+                              builder: (context, value, child) => TextButton(
+                                onPressed: () async {
+                                  await value.deleteMainImage(images![index]);
+                                  frame.imageUrl?.remove(images[index]);
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: value.state == ConnectionState.active
+                                    ? const SizedBox(
+                                        width: 50,
+                                        child: LinearProgressIndicator(),
+                                      )
+                                    : const Text('Yes, delete'),
+                              ),
+                            ),
+                          ],
+                          title: const Text('Are you sure to delete?'),
+                          content: SizedBox(
+                            width: 150,
+                            height: 150,
+                            child: Image.network(images![index]),
                           ),
-                        ],
-                        title: const Text('Are you sure to delete?'),
-                        content: SizedBox(
-                          width: 150,
-                          height: 150,
-                          child: Image.network(images![index]),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   icon: const Icon(Icons.delete_forever_rounded),
                 ),
@@ -319,6 +389,7 @@ class ImageGrid extends StatelessWidget {
 class ProductDetailTile extends StatelessWidget {
   final String title;
   final String detail;
+  final bool isAdd;
   final bool? isStock;
   final GlassFrame? frameData;
 
@@ -326,6 +397,7 @@ class ProductDetailTile extends StatelessWidget {
     Key? key,
     required this.title,
     required this.detail,
+    required this.isAdd,
     this.isStock = false,
     this.frameData,
   }) : super(key: key);
@@ -357,36 +429,98 @@ class ProductDetailTile extends StatelessWidget {
               ),
               Consumer<ProductProvider>(
                 builder: (context, value, child) => ElevatedButton(
-                  onPressed: () async {
-                    String mapKey = '';
-                    value.frame.toMap().forEach((key, value) {
-                      if (value.toString() == detail) {
-                        mapKey = key;
-                        return;
-                      }
-                    });
-                    var update = await Provider.of<ProductProvider>(context,
-                            listen: false)
-                        .updateFrame(
-                      {
-                        'key': mapKey,
-                        'value': controller.text.trim(),
-                      },
-                    );
-                    if (context.mounted) {
-                      if (update) {
-                        Navigator.of(context).pop();
-                        CherryToast.success(
-                          title: const Text('Success Update Data'),
-                        ).show(context);
-                      } else {
-                        CherryToast.error(
-                          title: const Text('Error while updating data'),
-                        ).show(context);
-                      }
-                    }
-                  },
-                  child: const Text('Save'),
+                  onPressed: value.state == ConnectionState.active
+                      ? null
+                      : () async {
+                          String mapKey = '';
+                          value.frame.toMap().forEach((key, value) {
+                            if (value.toString() == detail) {
+                              mapKey = key;
+                              return;
+                            }
+                          });
+                          if (isAdd) {
+                            print('$mapKey d');
+
+                            switch (title) {
+                              case 'Frame Name':
+                                value.frame = value.frame
+                                    .copyWith(name: controller.text.trim());
+
+                                break;
+                              case 'Frame Description':
+                                value.frame = value.frame.copyWith(
+                                    description: controller.text.trim());
+                                break;
+                              case 'Frame Gender':
+                                value.frame = value.frame
+                                    .copyWith(gender: controller.text.trim());
+                                break;
+                              case 'Frame Material':
+                                value.frame = value.frame
+                                    .copyWith(material: controller.text.trim());
+                                break;
+                              case 'Frame Price':
+                                value.frame = value.frame.copyWith(
+                                    price: int.parse(controller.text.trim()));
+                                break;
+                              case 'Frame Rating':
+                                value.frame = value.frame
+                                    .copyWith(rating: controller.text.trim());
+                                break;
+                              case 'Frame Shape':
+                                value.frame = value.frame
+                                    .copyWith(shape: controller.text.trim());
+                                break;
+                              case 'Frame Type':
+                                value.frame = value.frame
+                                    .copyWith(type: controller.text.trim());
+                                break;
+                              default:
+                            }
+
+                            Navigator.of(context).pop();
+                          } else {
+                            bool updateStatus = false;
+                            if (title == 'Frame Price') {
+                              updateStatus = await Provider.of<ProductProvider>(
+                                      context,
+                                      listen: false)
+                                  .updateFrame(
+                                {
+                                  'key': mapKey,
+                                  'value': int.parse(controller.text.trim()),
+                                },
+                              );
+                            } else {
+                              updateStatus = await Provider.of<ProductProvider>(
+                                      context,
+                                      listen: false)
+                                  .updateFrame(
+                                {
+                                  'key': mapKey,
+                                  'value': controller.text.trim(),
+                                },
+                              );
+                            }
+                            if (context.mounted) {
+                              if (updateStatus) {
+                                Navigator.of(context).pop();
+                                CherryToast.success(
+                                  title: const Text('Success Update Data'),
+                                ).show(context);
+                              } else {
+                                CherryToast.error(
+                                  title:
+                                      const Text('Error while updating data'),
+                                ).show(context);
+                              }
+                            }
+                          }
+                        },
+                  child: value.state == ConnectionState.active
+                      ? const CircularProgressIndicator()
+                      : const Text('Save'),
                 ),
               ),
             ],
@@ -406,6 +540,9 @@ class ProductDetailTile extends StatelessWidget {
                     onTapOutside: (event) {
                       primaryFocus?.unfocus();
                     },
+                    inputFormatters: title == 'Frame Price'
+                        ? [FilteringTextInputFormatter.digitsOnly]
+                        : null,
                     decoration: InputDecoration(
                       hintText: title,
                       border: OutlineInputBorder(

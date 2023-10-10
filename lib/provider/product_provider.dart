@@ -77,6 +77,22 @@ class ProductProvider extends BaseProvider {
     } finally {
       _isRefresh = false;
       state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addProduct() async {
+    state = ConnectionState.active;
+    try {
+      notifyListeners();
+      await _helper.addProduct(frame);
+      _frames.add(frame);
+      return true;
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
     }
   }
 
@@ -92,6 +108,20 @@ class ProductProvider extends BaseProvider {
       _frame = GlassFrame.fromMap(frame);
       _frames[index] = _frame;
       return true;
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
+  Future deleteProduct() async {
+    state = ConnectionState.active;
+    try {
+      notifyListeners();
+      await _helper.deleteProduct(frame);
+      _frames.remove(frame);
     } catch (e) {
       rethrow;
     } finally {

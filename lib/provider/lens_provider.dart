@@ -11,11 +11,11 @@ class LensProvider extends BaseProvider {
   final _helper = LensHelper();
   final ImagePicker _picker = ImagePicker();
 
-  List<Lens>? _lenses = [];
+  List<Lens> _lenses = [];
   Lens _lens = Lens();
   XFile? _image;
 
-  List<Lens>? get lenses => _lenses;
+  List<Lens> get lenses => _lenses;
   Lens get lens => _lens;
   XFile? get image => _image;
 
@@ -28,6 +28,20 @@ class LensProvider extends BaseProvider {
     state = ConnectionState.active;
     try {
       _lenses = await _helper.getLenses();
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
+  Future addLens() async {
+    state = ConnectionState.active;
+    notifyListeners();
+    try {
+      await _helper.addLens(lens);
+      lenses.add(lens);
     } catch (e) {
       rethrow;
     } finally {
@@ -50,6 +64,20 @@ class LensProvider extends BaseProvider {
 
       _lens = Lens.fromMap(updatedLens);
       await _helper.updateLens(_lens.id!, {key: newData});
+    } catch (e) {
+      rethrow;
+    } finally {
+      state = ConnectionState.done;
+      notifyListeners();
+    }
+  }
+
+  Future deleteLens() async {
+    state = ConnectionState.active;
+    try {
+      notifyListeners();
+      await _helper.deleteLens(lens);
+      lenses.remove(lens);
     } catch (e) {
       rethrow;
     } finally {

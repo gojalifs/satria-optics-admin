@@ -39,24 +39,26 @@ class ProductListPage extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   product.frame = frame;
-                  Navigator.of(context).pushNamed(ProductDetailPage.route);
+                  Navigator.of(context)
+                      .pushNamed(ProductDetailPage.route, arguments: false);
                 },
                 child: Card(
                   child: Stack(
                     children: [
-                      SizedBox(
-                        width: double.maxFinite,
-                        height: double.maxFinite,
-                        child: Image.network(
-                          frame.imageUrl![0],
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const ImageIcon(
-                              AssetImage('assets/icons/glasses.png'),
-                            );
-                          },
+                      if (frame.imageUrl != null && frame.imageUrl!.isNotEmpty)
+                        SizedBox(
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          child: Image.network(
+                            frame.imageUrl![0],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const ImageIcon(
+                                AssetImage('assets/icons/glasses.png'),
+                              );
+                            },
+                          ),
                         ),
-                      ),
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

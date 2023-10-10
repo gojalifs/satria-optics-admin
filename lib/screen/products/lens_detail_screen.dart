@@ -2,22 +2,53 @@ import 'dart:io';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:satria_optik_admin/provider/lens_provider.dart';
 
 class LensDetailPage extends StatelessWidget {
+  final bool isAdd;
   static String route = '/lens-detail';
-  const LensDetailPage({super.key});
+
+  const LensDetailPage({
+    Key? key,
+    required this.isAdd,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Consumer<LensProvider>(
-          builder: (context, value, child) => Text('${value.lens.name}'),
+          builder: (context, value, child) =>
+              Text(value.lens.name ?? 'Add New Lens'),
         ),
       ),
+      floatingActionButton: Consumer<LensProvider>(
+        builder: (context, value, child) => FloatingActionButton(
+          onPressed: value.state == ConnectionState.active
+              ? null
+              : () async {
+                  if (isAdd) {
+                    await value.addLens();
+                  } else {
+                    await value.deleteLens();
+                  }
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
+          child: value.state == ConnectionState.active
+              ? const CircularProgressIndicator.adaptive()
+              : isAdd
+                  ? const Text('Save')
+                  : const Icon(
+                      Icons.delete_forever_rounded,
+                    ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: ListView(
         children: [
           const Center(
@@ -36,32 +67,38 @@ class LensDetailPage extends StatelessWidget {
                   const Divider(),
                   DetailRow(
                     title: 'Lens Name',
-                    detail: '${lens.name}',
+                    detail: lens.name ?? '',
                     mapKey: keys[1],
+                    isAdd: isAdd,
                   ),
                   const Divider(),
                   DetailRow(
                     title: 'Description',
-                    detail: '${lens.description}',
+                    detail: lens.description ?? '',
                     mapKey: keys[2],
+                    isAdd: isAdd,
                   ),
                   const Divider(),
                   DetailRow(
                     title: 'price',
-                    detail: '${lens.price}',
+                    detail: (lens.price ?? '').toString(),
                     mapKey: keys[4],
+                    isAdd: isAdd,
                   ),
                   const Divider(),
-                  DetailRow(
-                    title: 'Image',
-                    detail: '${lens.imageUrl}',
-                    mapKey: keys[3],
-                    image: SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Image.network(lens.imageUrl!),
+                  if (lens.imageUrl != null)
+                    DetailRow(
+                      title: 'Image',
+                      detail: lens.imageUrl ?? '',
+                      mapKey: keys[3],
+                      isAdd: isAdd,
+                      image: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Image.network(lens.imageUrl!),
+                      ),
                     ),
-                  ),
+                  if (isAdd) const Text('You can add image in edit lens data'),
                   const Divider(),
                 ],
               );
@@ -74,6 +111,7 @@ class LensDetailPage extends StatelessWidget {
 }
 
 class DetailRow extends StatelessWidget {
+  final bool isAdd;
   final String title;
   final String detail;
   final Widget? image;
@@ -81,6 +119,7 @@ class DetailRow extends StatelessWidget {
 
   const DetailRow({
     Key? key,
+    required this.isAdd,
     required this.title,
     required this.detail,
     this.image,
@@ -118,14 +157,35 @@ class DetailRow extends StatelessWidget {
                   ),
                 Consumer<LensProvider>(
                   builder: (context, value, child) => TextButton(
-                    onPressed: () async {
-                      var data = controller.text;
-                      await Provider.of<LensProvider>(context, listen: false)
-                          .updateLens(mapKey, data);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
+                    onPressed: isAdd
+                        ? () {
+                            var data = controller.text.trim();
+                            switch (mapKey) {
+                              case 'description':
+                                value.lens =
+                                    value.lens.copyWith(description: data);
+                                break;
+                              case 'name':
+                                value.lens = value.lens.copyWith(name: data);
+                                break;
+                              case 'price':
+                                value.lens =
+                                    value.lens.copyWith(price: int.parse(data));
+                                break;
+                              default:
+                            }
+
+                            Navigator.of(context).pop();
+                          }
+                        : () async {
+                            var data = controller.text.trim();
+                            await Provider.of<LensProvider>(context,
+                                    listen: false)
+                                .updateLens(mapKey, data);
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          },
                     child: value.state == ConnectionState.active
                         ? const SizedBox(
                             width: 50,
@@ -136,7 +196,13 @@ class DetailRow extends StatelessWidget {
                 ),
               ],
               title: Text('Change $title'),
-              content: image ?? TextField(controller: controller),
+              content: image ??
+                  TextField(
+                    controller: controller,
+                    inputFormatters: mapKey == 'price'
+                        ? [FilteringTextInputFormatter.digitsOnly]
+                        : null,
+                  ),
             ),
           );
         },

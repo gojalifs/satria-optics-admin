@@ -2,8 +2,12 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satria_optik_admin/model/admins.dart';
+import 'package:satria_optik_admin/model/glass_frame.dart';
+import 'package:satria_optik_admin/model/lens.dart';
 import 'package:satria_optik_admin/provider/admins_provider.dart';
 import 'package:satria_optik_admin/provider/home_provider.dart';
+import 'package:satria_optik_admin/provider/lens_provider.dart';
+import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/admin/admins_screen.dart';
 import 'package:satria_optik_admin/screen/chat/chat_list_screen.dart';
 import 'package:satria_optik_admin/screen/customer/customers_screen.dart';
@@ -11,7 +15,9 @@ import 'package:satria_optik_admin/screen/dashboard/dashboard_screen.dart';
 import 'package:satria_optik_admin/screen/main/drawer.dart';
 import 'package:satria_optik_admin/screen/orders/all_order_screen.dart';
 import 'package:satria_optik_admin/screen/orders/new_order_screen.dart';
+import 'package:satria_optik_admin/screen/products/lens_detail_screen.dart';
 import 'package:satria_optik_admin/screen/products/lens_screen.dart';
+import 'package:satria_optik_admin/screen/products/product_detail_screen.dart';
 import 'package:satria_optik_admin/screen/products/products_screen.dart';
 import 'package:satria_optik_admin/screen/sales_report/report_monthly_screen.dart';
 import 'package:satria_optik_admin/screen/profile/profile_screen.dart';
@@ -85,7 +91,7 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  FloatingActionButton? makeFAB(BuildContext context) {
+  Widget? makeFAB(BuildContext context) {
     TextEditingController nameController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
@@ -93,9 +99,26 @@ class MainPage extends StatelessWidget {
 
     var page = Provider.of<HomeProvider>(context).page;
     if (page == ProductListPage.page || page == LensPage.page) {
-      return FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add_rounded),
+      return Consumer2<ProductProvider, LensProvider>(
+        builder: (context, productProv, lensProv, child) =>
+            FloatingActionButton(
+          onPressed: () {
+            if (page == ProductListPage.page) {
+              productProv.frame = GlassFrame();
+              Navigator.of(context).pushNamed(
+                ProductDetailPage.route,
+                arguments: true,
+              );
+            } else {
+              lensProv.lens = Lens();
+              Navigator.of(context).pushNamed(
+                LensDetailPage.route,
+                arguments: true,
+              );
+            }
+          },
+          child: const Icon(Icons.add_rounded),
+        ),
       );
     } else if (page == AdminScreen.page) {
       return FloatingActionButton(

@@ -25,6 +25,15 @@ class Lens {
     };
   }
 
+  Map<String, dynamic> toFirestore() {
+    return {
+      'name': name,
+      'description': description,
+      'imageUrl': imageUrl,
+      'price': price,
+    };
+  }
+
   factory Lens.fromMap(Map<String, dynamic> map) {
     return Lens(
       id: map['id'],

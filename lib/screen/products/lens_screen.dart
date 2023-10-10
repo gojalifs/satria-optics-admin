@@ -28,16 +28,19 @@ class LensPage extends StatelessWidget {
             await provider.getLenses();
           },
           child: GridView.builder(
-            itemCount: provider.lenses?.length ?? 0,
+            itemCount: provider.lenses.length ?? 0,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
             ),
             itemBuilder: (context, index) {
-              var lens = provider.lenses![index];
+              var lens = provider.lenses[index];
               return InkWell(
                 onTap: () {
                   provider.lens = lens;
-                  Navigator.of(context).pushNamed(LensDetailPage.route);
+                  Navigator.of(context).pushNamed(
+                    LensDetailPage.route,
+                    arguments: false,
+                  );
                 },
                 child: LenseesCard(index: index),
               );
@@ -84,7 +87,8 @@ class LenseesCard extends StatelessWidget {
     return Card(
       child: Consumer<LensProvider>(
         builder: (context, provider, child) => Image.network(
-          provider.lenses![index].imageUrl!,
+          provider.lenses[index].imageUrl ??
+              'https://www.glass-product.com/img/all-size-optical-glass.jpg',
           frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
             if (wasSynchronouslyLoaded) {
               return child;

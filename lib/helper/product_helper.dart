@@ -9,16 +9,31 @@ import 'package:satria_optik_admin/model/lens.dart';
 
 class ProductHelper extends FirestoreHelper {
   Future<List<GlassFrame>> getFrames() async {
-    List<GlassFrame> frames = [];
-    var ref = db.collection('products');
-    var collection = await ref.get();
-    for (var element in collection.docs) {
-      var data = element.data();
-      data['id'] = element.id;
+    try {
+      List<GlassFrame> frames = [];
+      var ref = db.collection('products');
+      var collection = await ref.get();
+      for (var element in collection.docs) {
+        var data = element.data();
+        data['id'] = element.id;
 
-      frames.add(GlassFrame.fromMap(data));
+        frames.add(GlassFrame.fromMap(data));
+      }
+      return frames;
+    } catch (e, s) {
+      print(s);
+      rethrow;
     }
-    return frames;
+  }
+
+  Future addProduct(GlassFrame frame) async {
+    try {
+      var ref = db.collection('products').doc();
+      await ref.set(frame.toMap(), SetOptions(merge: true));
+      frame = frame.copyWith(id: ref.id);
+    } catch (e) {
+      throw 'error adding data. try again later';
+    }
   }
 
   Future<bool> updateFrame(String id, Map<String, dynamic> data) async {
@@ -28,6 +43,15 @@ class ProductHelper extends FirestoreHelper {
       return true;
     } catch (e) {
       throw 'error updating data. code $e';
+    }
+  }
+
+  Future deleteProduct(GlassFrame frame) async {
+    try {
+      var ref = db.collection('products').doc(frame.id);
+      await ref.delete();
+    } catch (e) {
+      throw 'Error deleting product. try again';
     }
   }
 

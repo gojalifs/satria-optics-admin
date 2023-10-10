@@ -45,19 +45,19 @@ class GlassFrame {
     };
   }
 
-  factory GlassFrame.fromMap(Map<String, dynamic> map) {
+  factory GlassFrame.fromMap(Map<String, dynamic>? map) {
     return GlassFrame(
-      id: map['id'],
-      imageUrl: List<String>.from(map['imageUrl']),
-      name: map['name'],
-      price: map['price'],
-      rating: map['rating'],
-      description: map['description'],
-      type: map['type'],
-      shape: map['shape'],
-      gender: map['gender'],
-      material: map['material'],
-      colors: Map<String, dynamic>.from(map['colors']),
+      id: map?['id'],
+      imageUrl: List<String>.from(map?['imageUrl'] ?? []),
+      name: map?['name'],
+      price: map?['price'],
+      rating: map?['rating'],
+      description: map?['description'],
+      type: map?['type'],
+      shape: map?['shape'],
+      gender: map?['gender'],
+      material: map?['material'],
+      colors: Map<String, dynamic>.from(map?['colors'] ?? {}),
     );
   }
 

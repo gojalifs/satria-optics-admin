@@ -19,12 +19,31 @@ class LensHelper extends FirestoreHelper {
     return lenses;
   }
 
+  Future addLens(Lens lens) async {
+    try {
+      var ref = db.collection('lens').doc();
+      await ref.set(lens.toFirestore());
+      lens = lens.copyWith(id: ref.id);
+    } catch (e) {
+      throw 'error adding lens';
+    }
+  }
+
   Future updateLens(String id, Map<String, dynamic> data) async {
     try {
       var ref = db.collection('lens').doc(id);
       await ref.update(data);
     } catch (e) {
       throw 'error while getting lenses';
+    }
+  }
+
+  Future deleteLens(Lens lens) async {
+    try {
+      var ref = db.collection('lens').doc(lens.id);
+      await ref.delete();
+    } catch (e) {
+      throw 'error deleting data';
     }
   }
 

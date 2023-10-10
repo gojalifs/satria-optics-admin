@@ -63,8 +63,6 @@ class MyApp extends StatelessWidget {
           LoginPage.route: (context) => const LoginPage(),
           MainPage.route: (context) => const MainPage(),
           OrderDetailPage.route: (context) => const OrderDetailPage(),
-          ProductDetailPage.route: (context) => const ProductDetailPage(),
-          LensDetailPage.route: (context) => const LensDetailPage(),
           MonthlyReportPage.page: (context) => const MonthlyReportPage(),
         },
         onGenerateRoute: (settings) {
@@ -77,6 +75,16 @@ class MyApp extends StatelessWidget {
             var args = settings.arguments as String;
             return MaterialPageRoute(
               builder: (context) => ChatDataPage(userId: args),
+            );
+          } else if (settings.name == ProductDetailPage.route) {
+            var args = settings.arguments as bool;
+            return MaterialPageRoute(
+              builder: (context) => ProductDetailPage(isAdd: args),
+            );
+          } else if (settings.name == LensDetailPage.route) {
+            var args = settings.arguments as bool;
+            return MaterialPageRoute(
+              builder: (context) => LensDetailPage(isAdd: args),
             );
           }
           assert(false, 'Need to implement ${settings.name} on routes');
