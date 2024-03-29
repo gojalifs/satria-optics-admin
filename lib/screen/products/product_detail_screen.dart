@@ -9,6 +9,8 @@ import 'package:satria_optik_admin/model/glass_frame.dart';
 import 'package:satria_optik_admin/provider/product_provider.dart';
 import 'package:satria_optik_admin/screen/products/add_frame_stock_screen.dart';
 
+enum GenderValue { man, woman }
+
 class ProductDetailPage extends StatelessWidget {
   final bool isAdd;
   static String route = '/product-detail';
@@ -31,41 +33,75 @@ class ProductDetailPage extends StatelessWidget {
               ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: isAdd
-          ? Consumer<ProductProvider>(
-              builder: (context, value, child) => FloatingActionButton(
-                onPressed: Provider.of<ProductProvider>(context).frame !=
-                            GlassFrame() ||
-                        value.state != ConnectionState.active
-                    ? () {
-                        Provider.of<ProductProvider>(context, listen: false)
-                            .addProduct();
-                      }
-                    : null,
-                backgroundColor: value.frame != GlassFrame()
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey.shade400,
-                child: value.state != ConnectionState.active
-                    ? const Text('Save')
-                    : const CircularProgressIndicator(),
+      floatingActionButton: Consumer<ProductProvider>(
+        builder: (context, value, child) => value.frame.isFilled()
+            ? isAdd
+                ? Consumer<ProductProvider>(
+                    builder: (context, value, child) => FloatingActionButton(
+                      onPressed: value.frame.isFilled() ||
+                              value.state != ConnectionState.active
+                          ? () {
+                              print(value.frame.isFilled());
+                              Provider.of<ProductProvider>(context,
+                                      listen: false)
+                                  .addProduct();
+                              Navigator.of(context).pop();
+                            }
+                          : null,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                      child: value.state != ConnectionState.active
+                          ? const Text('Save')
+                          : const CircularProgressIndicator(),
+                    ),
+                  )
+                : Consumer<ProductProvider>(
+                    builder: (context, value, child) => FloatingActionButton(
+                      onPressed: value.state == ConnectionState.active
+                          ? null
+                          : () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog.adaptive(
+                                  title: const Text(
+                                      "Are you sure to delete this product?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await value.deleteProduct();
+                                        if (context.mounted) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: const Text("Yes, delete"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                      child: value.state == ConnectionState.active
+                          ? const CircularProgressIndicator.adaptive()
+                          : const Icon(Icons.delete_forever),
+                    ),
+                  )
+            : FloatingActionButton(
+                onPressed: null,
+                backgroundColor: Colors.grey.shade400,
+                child: const Text("Save"),
               ),
-            )
-          : Consumer<ProductProvider>(
-              builder: (context, value, child) => FloatingActionButton(
-                onPressed: value.state == ConnectionState.active
-                    ? null
-                    : () async {
-                        await value.deleteProduct();
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                child: value.state == ConnectionState.active
-                    ? const CircularProgressIndicator.adaptive()
-                    : const Icon(Icons.delete_forever),
-              ),
-            ),
+      ),
       body: ListView(
+        padding: const EdgeInsets.only(
+          bottom: 84,
+          left: 18,
+          right: 18,
+        ),
         children: [
           const Center(
             child: Text(
@@ -419,150 +455,180 @@ class ProductDetailTile extends StatelessWidget {
         showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => AlertDialog(
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              Consumer<ProductProvider>(
-                builder: (context, value, child) => ElevatedButton(
-                  onPressed: value.state == ConnectionState.active
-                      ? null
-                      : () async {
-                          String mapKey = '';
-                          value.frame.toMap().forEach((key, value) {
-                            if (value.toString() == detail) {
-                              mapKey = key;
-                              return;
-                            }
-                          });
-                          if (isAdd) {
-                            print('$mapKey d');
+          builder: (context) {
+            var gender = GenderValue.man.name;
+            return AlertDialog(
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                Consumer<ProductProvider>(
+                  builder: (context, value, child) => ElevatedButton(
+                    onPressed: value.state == ConnectionState.active
+                        ? null
+                        : () async {
+                            String mapKey = '';
+                            value.frame.toMap().forEach((key, value) {
+                              if (value.toString() == detail) {
+                                mapKey = key;
+                                return;
+                              }
+                            });
+                            if (isAdd) {
+                              print('$mapKey d');
 
-                            switch (title) {
-                              case 'Frame Name':
-                                value.frame = value.frame
-                                    .copyWith(name: controller.text.trim());
+                              switch (title) {
+                                case 'Frame Name':
+                                  value.frame = value.frame
+                                      .copyWith(name: controller.text.trim());
 
-                                break;
-                              case 'Frame Description':
-                                value.frame = value.frame.copyWith(
-                                    description: controller.text.trim());
-                                break;
-                              case 'Frame Gender':
-                                value.frame = value.frame
-                                    .copyWith(gender: controller.text.trim());
-                                break;
-                              case 'Frame Material':
-                                value.frame = value.frame
-                                    .copyWith(material: controller.text.trim());
-                                break;
-                              case 'Frame Price':
-                                value.frame = value.frame.copyWith(
-                                    price: int.parse(controller.text.trim()));
-                                break;
-                              case 'Frame Rating':
-                                value.frame = value.frame
-                                    .copyWith(rating: controller.text.trim());
-                                break;
-                              case 'Frame Shape':
-                                value.frame = value.frame
-                                    .copyWith(shape: controller.text.trim());
-                                break;
-                              case 'Frame Type':
-                                value.frame = value.frame
-                                    .copyWith(type: controller.text.trim());
-                                break;
-                              default:
-                            }
+                                  break;
+                                case 'Frame Description':
+                                  value.frame = value.frame.copyWith(
+                                      description: controller.text.trim());
+                                  break;
+                                case 'Frame Material':
+                                  value.frame = value.frame.copyWith(
+                                      material: controller.text.trim());
+                                  break;
+                                case 'Frame Price':
+                                  value.frame = value.frame.copyWith(
+                                      price: int.parse(controller.text.trim()));
+                                  break;
+                                case 'Frame Rating':
+                                  value.frame = value.frame
+                                      .copyWith(rating: controller.text.trim());
+                                  break;
+                                case 'Frame Shape':
+                                  value.frame = value.frame
+                                      .copyWith(shape: controller.text.trim());
+                                  break;
+                                case 'Frame Type':
+                                  value.frame = value.frame
+                                      .copyWith(type: controller.text.trim());
+                                  break;
+                                default:
+                              }
 
-                            Navigator.of(context).pop();
-                          } else {
-                            bool updateStatus = false;
-                            if (title == 'Frame Price') {
-                              updateStatus = await Provider.of<ProductProvider>(
-                                      context,
-                                      listen: false)
-                                  .updateFrame(
-                                {
-                                  'key': mapKey,
-                                  'value': int.parse(controller.text.trim()),
-                                },
-                              );
+                              Navigator.of(context).pop();
                             } else {
-                              updateStatus = await Provider.of<ProductProvider>(
-                                      context,
-                                      listen: false)
-                                  .updateFrame(
-                                {
-                                  'key': mapKey,
-                                  'value': controller.text.trim(),
-                                },
-                              );
-                            }
-                            if (context.mounted) {
-                              if (updateStatus) {
-                                Navigator.of(context).pop();
-                                CherryToast.success(
-                                  title: const Text('Success Update Data'),
-                                ).show(context);
+                              bool updateStatus = false;
+                              if (title == 'Frame Price') {
+                                updateStatus =
+                                    await Provider.of<ProductProvider>(context,
+                                            listen: false)
+                                        .updateFrame(
+                                  {
+                                    'key': mapKey,
+                                    'value': int.parse(controller.text.trim()),
+                                  },
+                                );
                               } else {
-                                CherryToast.error(
-                                  title:
-                                      const Text('Error while updating data'),
-                                ).show(context);
+                                updateStatus =
+                                    await Provider.of<ProductProvider>(context,
+                                            listen: false)
+                                        .updateFrame(
+                                  {
+                                    'key': mapKey,
+                                    'value': controller.text.trim(),
+                                  },
+                                );
+                              }
+                              if (context.mounted) {
+                                if (updateStatus) {
+                                  Navigator.of(context).pop();
+                                  CherryToast.success(
+                                    title: const Text('Success Update Data'),
+                                  ).show(context);
+                                } else {
+                                  CherryToast.error(
+                                    title:
+                                        const Text('Error while updating data'),
+                                  ).show(context);
+                                }
                               }
                             }
-                          }
-                        },
-                  child: value.state == ConnectionState.active
-                      ? const CircularProgressIndicator()
-                      : const Text('Save'),
+                          },
+                    child: value.state == ConnectionState.active
+                        ? const CircularProgressIndicator()
+                        : const Text('Save'),
+                  ),
+                ),
+              ],
+              content: StatefulBuilder(
+                builder: (context, setState) => Consumer<ProductProvider>(
+                  builder: (context, productProv, child) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(height: 20),
+                      if (!isStock! && title != "Frame Gender")
+                        TextFormField(
+                          controller: controller,
+                          minLines: 1,
+                          maxLines: 5,
+                          textInputAction: TextInputAction.done,
+                          onTapOutside: (event) {
+                            primaryFocus?.unfocus();
+                          },
+                          inputFormatters: title == 'Frame Price'
+                              ? [FilteringTextInputFormatter.digitsOnly]
+                              : null,
+                          decoration: InputDecoration(
+                            hintText: title,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (title == "Frame Gender")
+                        RadioListTile(
+                          value: GenderValue.man.name,
+                          groupValue: gender,
+                          onChanged: (value) {
+                            gender = value.toString();
+                            productProv.frame = productProv.frame.copyWith(
+                              gender: "Laki-laki",
+                            );
+                            setState(() {});
+                          },
+                          title: const Text('Laki-Laki'),
+                        ),
+                      if (title == "Frame Gender")
+                        RadioListTile(
+                          value: GenderValue.woman.name,
+                          groupValue: gender,
+                          onChanged: (value) {
+                            gender = value.toString();
+                            productProv.frame = productProv.frame.copyWith(
+                              gender: "Perempuan",
+                            );
+                            setState(() {});
+                          },
+                          title: const Text('Perempuan'),
+                        )
+                    ],
+                  ),
                 ),
               ),
-            ],
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 20),
-                ),
-                const SizedBox(height: 20),
-                if (!isStock!)
-                  TextFormField(
-                    controller: controller,
-                    minLines: 1,
-                    maxLines: 5,
-                    onTapOutside: (event) {
-                      primaryFocus?.unfocus();
-                    },
-                    inputFormatters: title == 'Frame Price'
-                        ? [FilteringTextInputFormatter.digitsOnly]
-                        : null,
-                    decoration: InputDecoration(
-                      hintText: title,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.tertiary,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+            );
+          },
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

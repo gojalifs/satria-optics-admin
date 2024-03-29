@@ -132,6 +132,7 @@ class ProductProvider extends BaseProvider {
 
   Future uploadImage() async {
     state = ConnectionState.active;
+    notifyListeners();
     try {
       Map<String, dynamic> newMap = Map.from(_tempVariantData!);
       newMap.removeWhere((key, value) {
@@ -166,6 +167,7 @@ class ProductProvider extends BaseProvider {
 
   Future uploadMainImage(String path) async {
     state = ConnectionState.active;
+    notifyListeners();
     try {
       String url = await _helper.uploadImage(_frame.id!, File(path));
       await _helper.updateFrame(_frame.id!, {

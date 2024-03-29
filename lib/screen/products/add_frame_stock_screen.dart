@@ -202,6 +202,9 @@ class _AddFrameStockPageState extends State<AddFrameStockPage> {
                           listen: false,
                         ).uploadImage();
                         setState(() {});
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                 child: value.state == ConnectionState.active
                     ? const CircularProgressIndicator.adaptive()
@@ -252,8 +255,10 @@ class _AddFrameStockPageState extends State<AddFrameStockPage> {
 
                                     colorData[color]['tempPath'] = path;
                                   } catch (e) {
-                                    CherryToast.info(title: Text('$e'))
-                                        .show(context);
+                                    if (context.mounted) {
+                                      CherryToast.info(title: Text('$e'))
+                                          .show(context);
+                                    }
                                   }
                                 },
                                 icon: const Icon(
@@ -274,8 +279,10 @@ class _AddFrameStockPageState extends State<AddFrameStockPage> {
 
                                     colorData['tempPath'] = path;
                                   } catch (e) {
-                                    CherryToast.info(title: Text('$e'))
-                                        .show(context);
+                                    if (context.mounted) {
+                                      CherryToast.info(title: Text('$e'))
+                                          .show(context);
+                                    }
                                   }
                                 },
                                 icon: const Icon(Icons.photo_rounded),

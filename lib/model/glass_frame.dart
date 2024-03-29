@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 class GlassFrame {
@@ -61,10 +59,19 @@ class GlassFrame {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory GlassFrame.fromJson(String source) =>
-      GlassFrame.fromMap(json.decode(source));
+  bool isFilled() {
+    if (name != null &&
+        price != null &&
+        description != null &&
+        type != null &&
+        shape != null &&
+        gender != null &&
+        material != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   GlassFrame copyWith({
     String? id,

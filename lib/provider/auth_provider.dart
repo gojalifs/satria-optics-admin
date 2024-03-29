@@ -74,6 +74,7 @@ class AuthProvider extends BaseProvider {
 
   Future<String> login(String email, String password) async {
     state = ConnectionState.active;
+    notifyListeners();
     try {
       var userCredential = await _authHelper.login(email, password);
       return userCredential.user!.uid;

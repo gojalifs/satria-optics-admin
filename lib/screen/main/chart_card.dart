@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -71,16 +73,21 @@ class ChartSample extends StatelessWidget {
                     color: Colors.pink.withOpacity(0.2),
                   ),
                   spots: List.generate(31, (index) => index).map((e) {
-                    double qty;
-                    qty = report.reports
-                        .where((element) {
-                          return element.date.day == e;
-                        })
-                        .toList()
-                        .length
-                        .toDouble();
-                    return FlSpot(e.toDouble(), qty);
+                    var random = Random();
+                    return FlSpot(
+                        e.toDouble(), 3 + random.nextInt(10).toDouble());
                   }).toList(),
+                  // List.generate(31, (index) => index).map((e) {
+                  //   double qty;
+                  //   qty = report.reports
+                  //       .where((element) {
+                  //         return element.date.day == e;
+                  //       })
+                  //       .toList()
+                  //       .length
+                  //       .toDouble();
+                  //   return FlSpot(e.toDouble(), qty);
+                  // }).toList(),
                 ),
               ],
             ),

@@ -44,18 +44,16 @@ class DashboardScreen extends StatelessWidget {
   }
 
   reportCard(BuildContext context) {
-    return const Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'This Month Report',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-          ),
-          SizedBox(height: 20),
-          ChartSample(),
-        ],
-      ),
+    return const Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'This Month Report',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+        ),
+        SizedBox(height: 20),
+        ChartSample(),
+      ],
     );
   }
 
